@@ -10,11 +10,11 @@
      <h1>GTD Tools</h1>
  </header>
 <div id="content">
-     <aside>
+ <aside oncontextmenu="return false;">
     <p>所有任务(<span id="task-num"></span>)</p>
     <p>分类列表</p>
     <ul id="category-level1-list">
-        <li class="category-level1">默认分类
+        <li class="category-level1 category0">默认分类
             <ol class="category-level2-list active">
                 <li class="category-level2 active">task1</li>
                 <li class="category-level2">task2</li>
@@ -22,11 +22,20 @@
         </li>
 
     </ul>
-    <p><img id="add-category" src="img/add.png" alt="">新加分类</p>
+    <ul id="right-mouse-btn">
+        <li id="add-category-level2">添加子分类</li>
+        <li id="delet-category-level2">删除子分类</li>
+    </ul>
+    <p class="add-category"><img id="add-category" src="img/add.png" alt="">新加分类</p>
     <div id="add-category-overlay" class="overlay">
         <label for="">分类名称</label>
         <input id="add-category-name" type="text">
         <input id="add-category-submit" type="submit" value="确认">
+    </div>
+    <div id="add-category-level2-overlay" class="overlay">
+        <label for="">分类名称</label>
+        <input id="add-category-level2-name" type="text">
+        <input id="add-category-level2-submit" type="submit" value="确认">
     </div>
  </aside>
  <section>

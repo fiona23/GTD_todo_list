@@ -1,15 +1,26 @@
 (function  () {
-    //本地存储
+    //local storage
     var storage = window.localStorage;
-    var data = {}
-    var nowDate = new Date();
-    console.log(nowDate)
+    var data = {};
+    var categoryData = {}
     if (storage.getItem("todoData")) {
         data = JSON.parse(storage.getItem("todoData"));
-    };
-    //DOM选择器
+    }
+    if (!storage.getItem('categoryData')) {
+        categoryData['category0'] = {
+            id: 'category0',
+            name: '默认分类'
+        }
+        storage.setItem("categoryData", JSON.stringify(categoryData));
+    }
+    else  {
+        categoryData = JSON.parse(storage.getItem('categoryData'))
+    }
+    //DOM selector
     var defaults = {
         cateL1Li: 'category-level1-list',
+        cateL2Li: 'category-level2-list',
+        cateL1: 'category-level1',
         cateL2: 'category-level2',
         addCategory: 'add-category',
         addCateSub: 'add-category-submit',
@@ -26,9 +37,15 @@
         editTask: 'edit',
         taskComplete: 'complete',
         pending: 'pending',
-        completed: 'completed'
+        completed: 'completed',
+        rightBtn: 'right-mouse-btn',
+        addCateL2: 'add-category-level2',
+        delCateL2: 'delet-category-level2',
+        addCateL2Overlay: 'add-category-level2-overlay',
+        addCateL2Name: 'add-category-level2-name',
+        addCateL2Sub: 'add-category-level2-submit'
     }
-    //分别代表未完成和完成
+    //convey pending and completed
     var codes = {
             "1" : "#pending",
             "2" : "#completed"
@@ -36,12 +53,24 @@
     //show all local storage
     var init =  {
         //show category
-        showNewCategory: function  () {
-            for (var i = 0, length = storage.length; i < length; i++) {
-                if (storage.key(i).substring(0,8) === "category"){
-                    var categoryName = document.createElement('li');
-                    categoryName.innerHTML = storage.getItem(storage.key(i))
-                    $('#'+defaults.cateL1Li).appendChild(categoryName)
+        showCategory: function  () {
+            $('#'+defaults.cateL1Li).innerHTML = ''
+            for (var params in categoryData) {
+                var cateLi = document.createElement('li');
+                cateLi.innerHTML = categoryData[params]['name'];
+                cateLi.className = defaults.cateL1 + " " + categoryData[params]['id'];
+                $('#'+defaults.cateL1Li).appendChild(cateLi)
+                var ol = document.createElement('ol');
+                ol.className = defaults.cateL2Li;
+                cateLi.appendChild(ol);
+                //显示子类
+                if (categoryData[params]['child']) {
+                    for (var childParams in categoryData[params]['child']){
+                        var newCateL2 = document.createElement('li');
+                        newCateL2.className = categoryData[params]['child'][childParams]['id']
+                        newCateL2.innerHTML = categoryData[params]['child'][childParams]['name'];
+                        ol.appendChild(newCateL2);
+                    }
                 }
             }
         },
@@ -68,7 +97,6 @@
             //get all task list by date
             var pendingTaskDateLi = getByClass(defaults.oneDayTask, $(codes['1']));
             var completedTaskDateLi = getByClass(defaults.oneDayTask, $(codes['2']));
-            console.log(pendingTaskDateLi)
             //判断pending 和 completed是否都存在
             var pendingTask = getByClass(defaults.pending);
             var completedTask = getByClass(defaults.completed);
@@ -96,7 +124,6 @@
                     //if date exsit, add task to this div
                     if (dateText.test(taskDateLi[i].innerHTML)) {
                         taskDateLi[i].getElementsByTagName('ol')[0].appendChild(taskDetail);
-                        console.log(taskDateLi[i])
                         break;
                     }
                     //if date dosent exsit, create
@@ -117,6 +144,7 @@
         showTaskDetail: function () {
             //init show the newlist task
             if (data[Object.keys(data)[0]]) {
+                $('#'+defaults.taskName).className = data[Object.keys(data)[0]]['id'];
                 $('#'+defaults.taskName).value = data[Object.keys(data)[0]]['title'];
                 $('#'+defaults.datepicker).value = data[Object.keys(data)[0]]['date'];
                 $('#'+defaults.taskDescription).value = data[Object.keys(data)[0]]['description'];
@@ -135,14 +163,16 @@
                 $('#'+defaults.taskName).className = id;
             }
         }
-    }//init function ends
+    }//init  ends
     init.showTaskList();
     init.showTaskDetail();
     init.clickTask();
-    init.showNewCategory();
+    init.showCategory();
+    
     //添加和删除分类
     var operateCategory = {
         addCategory: function () {
+            var tempData = {}
             //显示浮层
             $('#' + defaults.cateOverlay).style.display = "block";
             //存储一个cateNum来区分命名所有的category
@@ -151,37 +181,79 @@
             }
             //点击确认以后提交
             $.on('#'+defaults.addCateSub, "click", function () {
-                storage.setItem('cateNum',parseInt(storage.getItem("cateNum"))+1)
-                //传入新添加的目录key值
-                showNewCategory('category' + storage.getItem("cateNum"));
-                $('#' + defaults.cateOverlay).style.display = 'none';
+                if ($('#'+defaults.addCateName)) {
+                    var id1 = 'category' + (parseInt(storage.getItem("cateNum"))-1);
+                    storage.setItem('cateNum',parseInt(storage.getItem("cateNum"))+1)
+                    var id = 'category' + storage.getItem("cateNum");
+                    tempData.id = 'category' + storage.getItem("cateNum");
+                    tempData.name = $('#' + defaults.addCateName).value;
+                    categoryData[id] = tempData;
+                    //save data
+                    storage.setItem("categoryData", JSON.stringify(categoryData));
+                    $('#' + defaults.cateOverlay).style.display = 'none';
+                    $('#'+defaults.addCateName).value = ''
+                    init.showCategory()
+                    //移除绑定事件
+                    $.un('#'+defaults.addCateSub, "click")
+                }
+                else {
+                    //没有输入
+                }
             })
-            function showNewCategory(key) {
-                storage.setItem(key,$('#' + defaults.addCateName).value);
-                //新建目录dom
-                var newCategory = document.createElement('li');
-                newCategory.innerHTML = storage.getItem(key);
-                //将key值作为每个目录的id
-                newCategory.id = key;
-                $('#' + defaults.cateL1Li).appendChild(newCategory)
-            }
-        }
+        },
         // deleCategory: function () {
             
         // }
-    }
-    $.on('#' + defaults.addCategory, "click", operateCategory.addCategory)
-    var allTask = getByClass(defaults.cateL2);
-    //add taskClick method to all task
-    each(allTask, taskClick);
-    function taskClick (ele) {
-        $.on(ele, 'click', function () {
-            //remove all objects' 'active' class
-            for (var i = allTask.length - 1; i >= 0; i--) {
-                removeClass(allTask[i], 'active')
-            };
-            addClass(ele, 'active')
-        })
+        addCategoryLevel2: function () {
+            //如果有输入子类名称
+            if ($('#'+defaults.addCateL2Name).value) {
+                //将被点击的目录类名分割成数组
+                var clsAttr = target.className.split(' ');
+                console.log(target)
+                for (var i = clsAttr.length - 1; i >= 0; i--) {
+                    console.log(clsAttr[i])
+                    if (/^category[0-9]+$/.test(clsAttr[i])) {
+                        var id = new Date().getTime();
+                        if (!categoryData[clsAttr[i]].child) {
+                            categoryData[clsAttr[i]].child = {}
+                        };
+                        categoryData[clsAttr[i]].child[id] = {
+                            id: id,
+                            name: $('#'+defaults.addCateL2Name).value
+                        }
+                        storage.setItem("categoryData", JSON.stringify(categoryData))
+                        break;
+                    }
+                }
+                $('#'+defaults.addCateL2Overlay).style.display = 'none';
+                $('#'+defaults.addCateL2Name).value = ''
+                init.showCategory()
+            }
+            else {
+                //没有输入子类名称
+            }
+        },
+
+        showRightmenu: function (target, e) {
+            if (e.pageX || e.pageY) {
+                posy = e.pageY
+                posx = e.pageX
+            } else {
+                //IE没有pagex y 兼容
+                posx = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                posy = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            }
+            if (e.button === 2) {
+                //右键菜单
+                $('#'+defaults.rightBtn).style.display = 'block';
+                $('#'+defaults.rightBtn).style.left = posx + 2 + 'px';
+                $('#'+defaults.rightBtn).style.top = posy - 59 + 'px';
+            }
+            //不是按下的右键
+            else {
+                return false
+            }
+        }
     }
 
     var operateTask = {
@@ -219,11 +291,10 @@
             changeInputState();
             $.on('#'+defaults.sure, 'click', function () {
                 //update local storage
-                var id = $('#' + defaults.taskName).id
+                var id = $('#' + defaults.taskName).className
                 var title = $('#' + defaults.taskName).value;
                 var date = $('#' + defaults.datepicker).value;
                 var description = $('#' + defaults.taskDescription).value;
-                console.log(title)
                 data[id]['title'] = title;
                 data[id]['date'] = date;
                 data[id]['description'] = description;
@@ -238,22 +309,18 @@
             //update local storage
             storage.setItem("todoData", JSON.stringify(data));
             init.showTaskList();
+        },
+        cancleEditTask: function () {
+            $('#'+defaults.sureCancle).style.display = 'none';
+            //reset the task befor edit
+            var id = $('#' + defaults.taskName).className
+            $('#'+defaults.taskName).value = data[id]['title'];
+            $('#'+defaults.datepicker).value = data[id]['date'];
+            $('#'+defaults.taskDescription).value = data[id]['description'];
         }
     }
 
-    //add task
-    $.on('#'+defaults.addTask, 'click', function () {
-        //show sure and cancle btn
-        $('#'+defaults.sureCancle).style.display = 'block';
-        changeInputState();
-        //save task
-        $.on('#'+defaults.sure, 'click', operateTask.addTask)
-    })
-
-    //edit task
-    $.on('#'+defaults.editTask, 'click', operateTask.editTask)
-    $.on('#'+defaults.taskComplete, 'click' ,operateTask.taskComplete)
-
+    //change input state from disabled to abled or versa
     function changeInputState(e) {
         var e = event || window.event;
         var target = e.srcElement? e.srcElement : e.target;
@@ -274,12 +341,54 @@
             else if (target.id === defaults.editTask){
                 ele.removeAttribute('disabled')
             }
-            //if click complete task
-            /*else if (target.id === defaults.taskComplete){
-                ele.disabled = 'disabled'
-            }*/
         }
     }
 
+    //all event Listener
+    function allbind () {
+        //add category
+        $.on('#' + defaults.addCategory, "click", operateCategory.addCategory)
+        //hide right click while click anywhere
+        $.on('body', 'click', function () {
+            $('#'+defaults.rightBtn).style.display = 'none';
+        })
+        //点击添加子目录
+        $.on('#'+defaults.addCateL2, 'click', function () {
+            $('#'+defaults.addCateL2Overlay).style.display = 'block';
+        })
+        //右键点击显示Menu
+        $.delegate('#'+defaults.cateL1Li,'li', 'mousedown', operateCategory.showRightmenu)
+        //save sub category
+        $.on('#'+defaults.addCateL2Sub, 'click', operateCategory.addCategoryLevel2)
+
+        var allTask = getByClass(defaults.cateL2);
+        //add taskClick method to all task
+        each(allTask, taskClick);
+        function taskClick (ele) {
+            $.on(ele, 'click', function () {
+                //remove all objects' 'active' class
+                for (var i = allTask.length - 1; i >= 0; i--) {
+                    removeClass(allTask[i], 'active')
+                };
+                addClass(ele, 'active')
+            })
+        }
+
+        //add task
+        $.on('#'+defaults.addTask, 'click', function () {
+            //show sure and cancle btn
+            $('#'+defaults.sureCancle).style.display = 'block';
+            changeInputState();
+            //save task
+            $.on('#'+defaults.sure, 'click', operateTask.addTask);
+            
+        })
+        //cancle edit/add task
+        $.on('#'+defaults.cancle, 'click', operateTask.cancleEditTask)
+        //edit task
+        $.on('#'+defaults.editTask, 'click', operateTask.editTask)
+        $.on('#'+defaults.taskComplete, 'click' ,operateTask.taskComplete)
+    }
+    allbind();
 })()
 

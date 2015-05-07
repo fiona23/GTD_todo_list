@@ -35,20 +35,32 @@ aside {
     width: 230px;
     background-color: #f2f2f2;
     float: left;
+    position: relative;
+    min-height: 100%;
 }
-    aside #add-category{
+    aside #add-category {
         cursor: pointer;
+        padding-right: 10px;
     }
 
-#category-level1-list {
-    list-style: url(../img/mik.png);
-    padding-left: 40px;
-}
+    aside .add-category {
+        position: absolute;
+        bottom: 0;
+        height: 40px;
+        line-height: 20px;
+        padding: 10px; 
+        background-color: #ddd;
+        width: 100%;
+    }
+
+    #category-level1-list {
+        list-style: url(../img/mik.png);
+        padding-left: 40px;
+    }
     
 
     #category-level1-list .category-level2-list {
         list-style: url(../img/file.png);
-        height: 0;
     }
 
     #category-level1-list .category-level2-list.active {
@@ -58,6 +70,25 @@ aside {
         .category-level2-list .active {
             background-color: #fff;
         }
+
+    #right-mouse-btn {
+        position: absolute;
+        width: 150px;
+        text-align: center;
+        background-color: #fff;
+        z-index: 10000;
+        list-style: none;
+        cursor: pointer;
+        display: none;
+    }
+
+        #right-mouse-btn li {
+            padding: 5px 10px;
+            border: 1px solid #ddd;
+        }
+    #add-category-level2-overlay {
+        display: none;
+    }
 
 section {
     width: 230px;
