@@ -9,6 +9,14 @@ body,html{
     height: 100%;
 }
 
+.hidden {
+    display: none;
+}
+
+.show {
+    display: block;
+}
+
 header {
     height: 60px;
     background-color: #ddd;
@@ -23,6 +31,7 @@ header {
         color: #999;
         padding-left: 20px;
     }
+
 
 #content {
     position: relative;

@@ -67,73 +67,80 @@
                 if (categoryData[params]['child']) {
                     for (var childParams in categoryData[params]['child']){
                         var newCateL2 = document.createElement('li');
-                        newCateL2.className = categoryData[params]['child'][childParams]['id']
+                        newCateL2.className = categoryData[params]['child'][childParams]['id'] + ' ' + defaults.cateL2;
                         newCateL2.innerHTML = categoryData[params]['child'][childParams]['name'];
                         ol.appendChild(newCateL2);
                     }
                 }
             }
+            //add active class
+            addClass($('.'+defaults.cateL2Li).getElementsByTagName('li')[0], 'active')
         },
         
         //show tasklist
-        showTaskList: function () {
+        showTaskList: function (choosedClass) {
             //clear task
             $(codes['1']).innerHTML = '';
             $(codes['2']).innerHTML = ''
             for (var params in data){
+            //get which category choosed
+            var choosedClass = getByClass('active', $('#'+defaults.cateL1Li))[0].className.split(' ')[0];
             //append child by code
-            var parent = $(codes[data[params]['code']]);
-            //console.log(parent)
-            //taskDetail is each task
-            var taskDetail = document.createElement('li');
-            taskDetail.id = data[params]['id'];
-            taskDetail.innerHTML = data[params]['title'];
-            if (data[params]['code'] === '1') {
-                addClass(taskDetail, defaults.pending)
-            }
-            else if (data[params]['code'] === '2'){
-                addClass(taskDetail, defaults.completed)
-            }
-            //get all task list by date
-            var pendingTaskDateLi = getByClass(defaults.oneDayTask, $(codes['1']));
-            var completedTaskDateLi = getByClass(defaults.oneDayTask, $(codes['2']));
-            //判断pending 和 completed是否都存在
-            var pendingTask = getByClass(defaults.pending);
-            var completedTask = getByClass(defaults.completed);
-            var condition;
-            if ('#'+parent.id === codes['1']) {
-                condition = !pendingTask[0];
-                taskDateLi = pendingTaskDateLi;
-            } else if ('#'+parent.id === codes['2']){
-                condition = !completedTask[0];
-                taskDateLi = completedTaskDateLi;
-            }
-            //如果还没有任务就先创建第一个任务
-            if (condition) {
-                var newDayTask = document.createElement('div');
-                parent.appendChild(newDayTask);
-                //create p->date
-                newDayTask.innerHTML = '<p>' + data[params]['date'] + '</p>';
-                addClass(newDayTask, defaults.oneDayTask);
-                newDayTask.appendChild(document.createElement('ol'))
-                newDayTask.getElementsByTagName('ol')[0].appendChild(taskDetail)
-            }
-            else {
-                for (var length = taskDateLi.length, i = length - 1; i >= 0; i--) {
-                    var dateText = new RegExp(data[params]['date']);
-                    //if date exsit, add task to this div
-                    if (dateText.test(taskDateLi[i].innerHTML)) {
-                        taskDateLi[i].getElementsByTagName('ol')[0].appendChild(taskDetail);
-                        break;
-                    }
-                    //if date dosent exsit, create
-                    else if(i==0) {
-                            var newDayTask = document.createElement('div');
-                            parent.appendChild(newDayTask);
-                            newDayTask.innerHTML = '<p>' + data[params]['date'] + '</p>';
-                            addClass(newDayTask, defaults.oneDayTask);
-                            newDayTask.appendChild(document.createElement('ol'));
-                            newDayTask.getElementsByTagName('ol')[0].appendChild(taskDetail);
+            if (data[params]['className'] === choosedClass) {
+                var parent = $(codes[data[params]['code']]);
+                //taskDetail is each task
+                var taskDetail = document.createElement('li');
+                taskDetail.id = data[params]['id'];
+                taskDetail.innerHTML = data[params]['title'];
+                if (data[params]['code'] === '1') {
+                    addClass(taskDetail, defaults.pending)
+                }
+                else if (data[params]['code'] === '2'){
+                    addClass(taskDetail, defaults.completed)
+                }
+                //get all task list by date
+                var pendingTaskDateLi = getByClass(defaults.oneDayTask, $(codes['1']));
+                var completedTaskDateLi = getByClass(defaults.oneDayTask, $(codes['2']));
+                //判断pending 和 completed是否都存在
+                var pendingTask = getByClass(defaults.pending);
+                var completedTask = getByClass(defaults.completed);
+                var condition;
+                if ('#'+parent.id === codes['1']) {
+                    condition = !pendingTask[0];
+                    taskDateLi = pendingTaskDateLi;
+                } else if ('#'+parent.id === codes['2']){
+                    condition = !completedTask[0];
+                    taskDateLi = completedTaskDateLi;
+                }
+                //如果还没有任务就先创建第一个任务
+                if (condition) {
+                    var newDayTask = document.createElement('div');
+                    parent.appendChild(newDayTask);
+                    //create p->date
+                    newDayTask.innerHTML = '<p>' + data[params]['date'] + '</p>';
+                    addClass(newDayTask, defaults.oneDayTask);
+                    addClass(newDayTask, data[params]['className']);
+                    //newDayTask.className = trim(newDayTask.className)
+                    newDayTask.appendChild(document.createElement('ol'))
+                    newDayTask.getElementsByTagName('ol')[0].appendChild(taskDetail)
+                }
+                else {
+                    for (var length = taskDateLi.length, i = length - 1; i >= 0; i--) {
+                        var dateText = new RegExp(data[params]['date']);
+                        //if date exsit, add task to this div
+                        if (dateText.test(taskDateLi[i].innerHTML)) {
+                            taskDateLi[i].getElementsByTagName('ol')[0].appendChild(taskDetail);
+                            break;
+                        }
+                        //if date doesnt exsit, create
+                        else if(i==0) {
+                                var newDayTask = document.createElement('div');
+                                parent.appendChild(newDayTask);
+                                newDayTask.innerHTML = '<p>' + data[params]['date'] + '</p>';
+                                addClass(newDayTask, defaults.oneDayTask);
+                                newDayTask.appendChild(document.createElement('ol'));
+                                newDayTask.getElementsByTagName('ol')[0].appendChild(taskDetail);
+                            }
                         }
                     }
                 }
@@ -143,12 +150,18 @@
         //show task detail
         showTaskDetail: function () {
             //init show the newlist task
-            if (data[Object.keys(data)[0]]) {
-                $('#'+defaults.taskName).className = data[Object.keys(data)[0]]['id'];
-                $('#'+defaults.taskName).value = data[Object.keys(data)[0]]['title'];
-                $('#'+defaults.datepicker).value = data[Object.keys(data)[0]]['date'];
-                $('#'+defaults.taskDescription).value = data[Object.keys(data)[0]]['description'];
-            };
+            for (var params in data){
+            //get which category choosed
+            var choosedClass = getByClass('active', $('#'+defaults.cateL1Li))[0].className.split(' ')[0];
+                if (data[params]['className'] === choosedClass) {
+                    $('#'+defaults.taskName).className = data[params]['id'];
+                    $('#'+defaults.taskName).value = data[params]['title'];
+                    $('#'+defaults.datepicker).value = data[params]['date'];
+                    $('#'+defaults.taskDescription).value = data[params]['description'];
+                    break;
+                }
+            }
+            
         },
 
         // delegate click show task
@@ -164,10 +177,12 @@
             }
         }
     }//init  ends
+    
+    init.showCategory();
+    //初始默认任务的第一个
     init.showTaskList();
     init.showTaskDetail();
     init.clickTask();
-    init.showCategory();
     
     //添加和删除分类
     var operateCategory = {
@@ -182,7 +197,6 @@
             //点击确认以后提交
             $.on('#'+defaults.addCateSub, "click", function () {
                 if ($('#'+defaults.addCateName)) {
-                    var id1 = 'category' + (parseInt(storage.getItem("cateNum"))-1);
                     storage.setItem('cateNum',parseInt(storage.getItem("cateNum"))+1)
                     var id = 'category' + storage.getItem("cateNum");
                     tempData.id = 'category' + storage.getItem("cateNum");
@@ -261,6 +275,9 @@
             var title = $('#' + defaults.taskName).value;
             var date = $('#' + defaults.datepicker).value;
             var description = $('#' + defaults.taskDescription).value;
+            //判断左侧哪个子目录处于active状态
+            var activeCate = $('.active')
+            var className = activeCate.className.split(' ')[0]
             if (title && date && description) {
                 //以时间毫秒数给每个task加一个id
                 var id = new Date().getTime();
@@ -269,15 +286,12 @@
                     code: "1",
                     title: title,
                     date: date,
-                    description: description
+                    description: description,
+                    className: className
                 }
                 data[id] = tempData;
                 //storage each task info
                 storage.setItem("todoData", JSON.stringify(data));
-                function createElement (params) {
-                    //append new task to parent
-                    var parent = $(codes[params.code])
-                }
                 init.showTaskList();
             }
             //信息填写不全
@@ -300,6 +314,7 @@
                 data[id]['description'] = description;
                 storage.setItem("todoData", JSON.stringify(data));
                 init.showTaskList();
+                $('#'+defaults.sureCancle).style.display = 'none';
             })
 
         },
@@ -360,7 +375,7 @@
         $.delegate('#'+defaults.cateL1Li,'li', 'mousedown', operateCategory.showRightmenu)
         //save sub category
         $.on('#'+defaults.addCateL2Sub, 'click', operateCategory.addCategoryLevel2)
-
+        
         var allTask = getByClass(defaults.cateL2);
         //add taskClick method to all task
         each(allTask, taskClick);
@@ -370,7 +385,14 @@
                 for (var i = allTask.length - 1; i >= 0; i--) {
                     removeClass(allTask[i], 'active')
                 };
+                //sub category click hightlight
                 addClass(ele, 'active')
+                //show the choosed task
+                var choosedClass = ele.className.split(' ')[0];
+                $('.task-wrapper').innerHTML = '<div id="pending"></div><div id="completed"></div>';
+                init.showTaskList();
+                //显示该分类下第一个任务
+                init.showTaskDetail();
             })
         }
 
