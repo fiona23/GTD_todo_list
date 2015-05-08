@@ -95,7 +95,7 @@ function trim(str) {
     for (var j=newstr.length; j>0;j--){
         //判断最后一个不是空格的字符
         if(whitespace.indexOf(newstr.charAt(j)) == -1){
-            newstr = newstr.slice(0,-j);
+            newstr = newstr.slice(0,j+1);
             break;
         }
     }
@@ -144,12 +144,13 @@ function isMobilePhone(phone) {
 // 为dom增加一个样式名为newClassName的新样式
 function addClass(element, newClassName) {
     element.className += " "+ newClassName
-    
+    element.className = trim(element.className)
 }
 
 // 移除dom中的样式oldClassName
 function removeClass(element, oldClassName) {
-     element.className = element.className.replace(oldClassName,"")
+     element.className = element.className.replace(oldClassName,"");
+     element.className = trim(element.className)
 }
 
 
@@ -173,7 +174,7 @@ function getByClass(selector, parent){
     }
     var oClass = parent.getElementsByTagName('*')
     for (var i=0; i<oClass.length; i++){
-        var classArr = oClass[i].className.split(" ")
+        var classArr = trim(oClass[i].className).split(" ")
         for (var j = classArr.length - 1; j >= 0; j--) {
             if (classArr[j] === selector) {
                 classResult.push(oClass[i]);

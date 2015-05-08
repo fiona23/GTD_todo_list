@@ -9,13 +9,80 @@ body,html{
     height: 100%;
 }
 
-.hidden {
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.3);
     display: none;
 }
-
-.show {
-    display: block;
+.overlay .black {
+    position: absolute;
+    top:35%;
+    left: 40%;
+    width: 400px;
+    height: 230px;
+    border-radius: 5px;
+    background-color: #f6f6f6;
+    -moz-box-shadow: 10px 10px 10px #888888; /* 老的 Firefox */
+    box-shadow: 10px 10px 10px #888888;
 }
+
+    .overlay-content {
+        padding: 20px;
+        margin: 0 auto;
+    }
+
+    .overlay p {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 15px;
+    }
+    
+    .overlay .name-label {
+        display: block;
+        margin-top: 20px;
+    }
+    .overlay .name-input {
+        display: block;
+        margin: 20px auto;
+        width: 100%;
+        height: 30px;
+    }
+    .overlay .sub-input {
+        display: block;
+        margin: 20px auto;
+        width: 100%;
+        height: 30px;
+        background-color: #7AC240;
+        border: none;
+        color: #fff;
+        -webkit-transition: all 0.4s ease-in-out;
+        -moz-transition: all 0.4s ease-in-out;
+        -o-transition: all 0.4s ease-in-out;
+        transition: all 0.4s ease-in-out; 
+        cursor: pointer;
+    }
+
+        .overlay .sub-input:hover {
+            background-color: #297F36;
+        }
+
+    .overlay .cancle {
+        position: absolute;
+        left: 386px;
+        top: -7px;
+        height: 20px;
+        width: 20px;
+        border-radius: 50%;
+        background-color: #f00;
+        color: #fff;
+        text-align: center;
+        font-family: "Microsoft Yahei";
+        font-weight: bold;
+        cursor: pointer;
+    }
 
 header {
     height: 60px;
@@ -61,7 +128,11 @@ aside {
         background-color: #ddd;
         width: 100%;
     }
-
+    
+    aside p {
+        line-height: 30px;
+        padding-left: 5px;
+    }
     #category-level1-list {
         list-style: url(../img/mik.png);
         padding-left: 40px;
@@ -98,6 +169,16 @@ aside {
     #add-category-level2-overlay {
         display: none;
     }
+    
+    .category-level1 {
+        padding-top: 5px;
+        line-height: 30px;
+    }
+    .category-level2 {
+        height: 25px;
+        line-height: 25px;
+        padding-left: 10px;
+    }
 
 section {
     width: 230px;
@@ -105,7 +186,6 @@ section {
     position: relative;
     min-height: 100%;
 }
-
     .task-wrapper {
         padding-bottom: 70px;
     }
@@ -126,12 +206,6 @@ section {
     }
 
 
-    #add-category-overlay {
-        position: absolute;
-        background: rgba(0,0,0,0.3);
-        display: none;
-    }
-
     #sure-cancle {
         position: absolute;
         bottom: 40px;
@@ -140,7 +214,6 @@ section {
     }
     .task-btn {
         width: 50%;
-        box-sizing: border-box;
         border: 1px solid #ddd;
         float: left;
         height: 30px;
@@ -160,8 +233,14 @@ section {
     }
 
         .codes {
-            padding: 10px;
+            padding: 5px 10px;
+            cursor: pointer;
         }
+
+            .codes.active {
+                background-color: #fff;
+                border-radius: 5px;
+            }
 
     .one-day-task p{
         list-style: none;
@@ -179,6 +258,10 @@ section {
             cursor: pointer;
             list-style: none;
         }
+
+    #completed .one-day-task p {
+        background-color: #f5f5f5;
+    }
 article {
     margin-left: 460px;
     min-width: 460px;

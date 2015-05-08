@@ -43,7 +43,11 @@
         delCateL2: 'delet-category-level2',
         addCateL2Overlay: 'add-category-level2-overlay',
         addCateL2Name: 'add-category-level2-name',
-        addCateL2Sub: 'add-category-level2-submit'
+        addCateL2Sub: 'add-category-level2-submit',
+        pendingBtn: 'pending-btn',
+        completedBtn: 'completed-btn',
+        allBtn: 'all-btn',
+        allTaskNum: 'all-task-num'
     }
     //convey pending and completed
     var codes = {
@@ -57,7 +61,8 @@
             $('#'+defaults.cateL1Li).innerHTML = ''
             for (var params in categoryData) {
                 var cateLi = document.createElement('li');
-                cateLi.innerHTML = categoryData[params]['name'];
+
+                cateLi.innerHTML = categoryData[params]['name']+ '(<span class="taskNumDivi"></span>)' ;
                 cateLi.className = defaults.cateL1 + " " + categoryData[params]['id'];
                 $('#'+defaults.cateL1Li).appendChild(cateLi)
                 var ol = document.createElement('ol');
@@ -67,14 +72,22 @@
                 if (categoryData[params]['child']) {
                     for (var childParams in categoryData[params]['child']){
                         var newCateL2 = document.createElement('li');
-                        newCateL2.className = categoryData[params]['child'][childParams]['id'] + ' ' + defaults.cateL2;
-                        newCateL2.innerHTML = categoryData[params]['child'][childParams]['name'];
+                        newCateL2.className = categoryData[params]['child'][childParams]['id'] + ' '
+                        + defaults.cateL2 + ' ' + categoryData[params]['id'];
+                        newCateL2.innerHTML = categoryData[params]['child'][childParams]['name'] ;
                         ol.appendChild(newCateL2);
                     }
+                    
+                    //add active class
+                    
+                    //show amount of task
+                    $('#'+defaults.allTaskNum).innerHTML = getByClass(defaults.cateL2).length;
+                    }
+                    getByClass('taskNumDivi', cateLi)[0].innerHTML = getByClass(defaults.cateL2, cateLi).length || 0
                 }
-            }
-            //add active class
-            addClass($('.'+defaults.cateL2Li).getElementsByTagName('li')[0], 'active')
+                if ($('.'+defaults.cateL2Li).getElementsByTagName('li')[0]) {
+                    addClass($('.'+defaults.cateL2Li).getElementsByTagName('li')[0], 'active')
+                };
         },
         
         //show tasklist
@@ -223,9 +236,7 @@
             if ($('#'+defaults.addCateL2Name).value) {
                 //将被点击的目录类名分割成数组
                 var clsAttr = target.className.split(' ');
-                console.log(target)
                 for (var i = clsAttr.length - 1; i >= 0; i--) {
-                    console.log(clsAttr[i])
                     if (/^category[0-9]+$/.test(clsAttr[i])) {
                         var id = new Date().getTime();
                         if (!categoryData[clsAttr[i]].child) {
@@ -248,7 +259,9 @@
             }
         },
 
-        showRightmenu: function (target, e) {
+        showRightmenu: function () {
+            var e = event || window.event;
+            target = e.srcElement? e.srcElement : e.target;
             if (e.pageX || e.pageY) {
                 posy = e.pageY
                 posx = e.pageX
@@ -332,6 +345,28 @@
             $('#'+defaults.taskName).value = data[id]['title'];
             $('#'+defaults.datepicker).value = data[id]['date'];
             $('#'+defaults.taskDescription).value = data[id]['description'];
+        },
+        chooseCode: function () {
+            var e = event || window.event;
+            target = e.srcElement? e.srcElement : e.target;
+            for (var i = getByClass('codes', $('#codes-line')).length - 1; i >= 0; i--) {
+                removeClass(getByClass('codes', $('#codes-line'))[i], 'active')
+            };
+            addClass(target, 'active')
+            var pending = new RegExp(defaults.pending)
+            var completed = new RegExp(defaults.completed)
+            if (pending.test(target.id)) {
+                $('#'+defaults.pending).style.display = 'block'
+                $('#'+defaults.completed).style.display = 'none'
+            }
+            else if (completed.test(target.id)) {
+                $('#'+defaults.completed).style.display = 'block'
+                $('#'+defaults.pending).style.display = 'none'
+            } else {
+                //show all task
+                $('#'+defaults.pending).style.display = 'block';
+                $('#'+defaults.completed).style.display = 'block'
+            }
         }
     }
 
@@ -372,7 +407,7 @@
             $('#'+defaults.addCateL2Overlay).style.display = 'block';
         })
         //右键点击显示Menu
-        $.delegate('#'+defaults.cateL1Li,'li', 'mousedown', operateCategory.showRightmenu)
+        $.on('#'+defaults.cateL1Li, 'mousedown', operateCategory.showRightmenu)
         //save sub category
         $.on('#'+defaults.addCateL2Sub, 'click', operateCategory.addCategoryLevel2)
         
@@ -409,7 +444,16 @@
         $.on('#'+defaults.cancle, 'click', operateTask.cancleEditTask)
         //edit task
         $.on('#'+defaults.editTask, 'click', operateTask.editTask)
-        $.on('#'+defaults.taskComplete, 'click' ,operateTask.taskComplete)
+        $.on('#'+defaults.taskComplete, 'click' ,operateTask.taskComplete);
+        $.on('#'+defaults.pendingBtn, 'click', operateTask.chooseCode)
+        $.on('#'+defaults.completedBtn, 'click', operateTask.chooseCode)
+        $.on('#'+defaults.allBtn, 'click', operateTask.chooseCode)
+        $.on(getByClass('cancle', $('#'+defaults.addCateL2Overlay))[0], 'click', function () {
+             $('#'+defaults.addCateL2Overlay).style.display = 'none'
+        })
+        $.on(getByClass('cancle', $('#'+defaults.cateOverlay))[0], 'click', function () {
+            $('#'+defaults.cateOverlay).style.display = 'none'
+        })
     }
     allbind();
 })()
