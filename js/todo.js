@@ -47,7 +47,8 @@
         pendingBtn: 'pending-btn',
         completedBtn: 'completed-btn',
         allBtn: 'all-btn',
-        allTaskNum: 'all-task-num'
+        allTaskNum: 'all-task-num',
+        delCateBtn: 'delete-category-btn'
     }
     //convey pending and completed
     var codes = {
@@ -61,9 +62,17 @@
             $('#'+defaults.cateL1Li).innerHTML = ''
             for (var params in categoryData) {
                 var cateLi = document.createElement('li');
-
-                cateLi.innerHTML = categoryData[params]['name']+ '(<span class="taskNumDivi"></span>)' ;
+                if (categoryData[params]['name'] === '默认分类') {
+                    cateLi.innerHTML = '<div class="category-name">'+categoryData[params]['name']
+                    + '(<span class="taskNumDivi"></span>)</div>' ;
+                }
+                else {
+                    cateLi.innerHTML = '<div class="category-name">'+categoryData[params]['name']
+                    + '(<span class="taskNumDivi"></span>)<p class="'
+                    +defaults.delCateBtn+'"></p></div>';
+                }
                 cateLi.className = defaults.cateL1 + " " + categoryData[params]['id'];
+                addClass(getByClass('category-name', cateLi)[0], categoryData[params]['id'])
                 $('#'+defaults.cateL1Li).appendChild(cateLi)
                 var ol = document.createElement('ol');
                 ol.className = defaults.cateL2Li;
@@ -77,17 +86,35 @@
                         newCateL2.innerHTML = categoryData[params]['child'][childParams]['name'] ;
                         ol.appendChild(newCateL2);
                     }
-                    
-                    //add active class
-                    
                     //show amount of task
                     $('#'+defaults.allTaskNum).innerHTML = getByClass(defaults.cateL2).length;
                     }
                     getByClass('taskNumDivi', cateLi)[0].innerHTML = getByClass(defaults.cateL2, cateLi).length || 0
-                }
-                if ($('.'+defaults.cateL2Li).getElementsByTagName('li')[0]) {
-                    addClass($('.'+defaults.cateL2Li).getElementsByTagName('li')[0], 'active')
                 };
+                //add active task
+                if ($('.'+defaults.cateL2)) {
+                    addClass($('.'+defaults.cateL2), 'active')
+                }
+
+                var allTask = getByClass(defaults.cateL2);
+                //add taskClick method to all task
+                each(allTask, taskClick);
+                function taskClick (ele) {
+                    $.on(ele, 'click', function () {
+                        //remove all objects' 'active' class
+                        for (var i = allTask.length - 1; i >= 0; i--) {
+                            removeClass(allTask[i], 'active')
+                        };
+                        //sub category click hightlight
+                        addClass(ele, 'active')
+                        //show the choosed task
+                        var choosedClass = ele.className.split(' ')[0];
+                        $('.task-wrapper').innerHTML = '<div id="pending"></div><div id="completed"></div>';
+                        init.showTaskList();
+                        //显示该分类下第一个任务
+                        init.showTaskDetail();
+                    })
+                }
         },
         
         //show tasklist
@@ -162,7 +189,10 @@
         
         //show task detail
         showTaskDetail: function () {
-            //init show the newlist task
+            //如果data为空
+            $('#'+defaults.taskName).value = '';
+            $('#'+defaults.datepicker).value = '';
+            $('#'+defaults.taskDescription).value = '';
             for (var params in data){
             //get which category choosed
             var choosedClass = getByClass('active', $('#'+defaults.cateL1Li))[0].className.split(' ')[0];
@@ -181,6 +211,7 @@
         clickTask: function () {
             $.delegate('section', 'li', 'click', showClickTask);
             function showClickTask (target, e) {
+                addClass(target, 'active-task')
                 var id = target.id;
                 $('#'+defaults.taskName).value = data[id]['title'];
                 $('#'+defaults.datepicker).value = data[id]['date'];
@@ -221,16 +252,37 @@
                     $('#'+defaults.addCateName).value = ''
                     init.showCategory()
                     //移除绑定事件
-                    $.un('#'+defaults.addCateSub, "click")
+                    $.un('#'+defaults.addCateSub, "click");
+
                 }
                 else {
                     //没有输入
                 }
             })
         },
-        // deleCategory: function () {
-            
-        // }
+        deleteCategory: function (target, e) {
+            var sure = confirm('删除目录，该目录下的所有任务也会被删除，确定吗');
+            if (sure) {
+                var needDelete = target.parentNode.parentNode;
+                var id = needDelete.className.split(' ')[1];
+                var dataId = categoryData[id]['child'];
+                for (var params in dataId){
+                    var needDelteTask = params;
+                    break;
+                }
+                for (var task in data){
+                    if (data[task]['className'] == needDelteTask) {
+                        delete data[task]
+                    }
+                }
+                delete categoryData[id];
+                storage.setItem("categoryData", JSON.stringify(categoryData));
+                storage.setItem("todoData", JSON.stringify(data));
+                init.showCategory();
+                init.showTaskList();
+                init.showTaskDetail();
+            }
+        },
         addCategoryLevel2: function () {
             //如果有输入子类名称
             if ($('#'+defaults.addCateL2Name).value) {
@@ -252,13 +304,31 @@
                 }
                 $('#'+defaults.addCateL2Overlay).style.display = 'none';
                 $('#'+defaults.addCateL2Name).value = ''
-                init.showCategory()
+                init.showCategory();
             }
             else {
                 //没有输入子类名称
             }
         },
-
+        deleteCategoryLevel2: function () {
+            var sure = confirm('删除目录，该目录下的所有任务也会被删除，确定吗');
+            if (sure) {
+                console.log(target)
+                var needDeletetask = target.className.split(' ')[0];
+                var needDeleteParent = target.className.split(' ')[2]
+                delete categoryData[needDeleteParent]['child'][needDeletetask]
+                for (var task in data){
+                    if (data[task]['className'] == needDeletetask) {
+                        delete data[task]
+                    }
+                }
+                storage.setItem("categoryData", JSON.stringify(categoryData));
+                storage.setItem("todoData", JSON.stringify(data));
+                init.showCategory();
+                init.showTaskList();
+                init.showTaskDetail();
+            }
+        },
         showRightmenu: function () {
             var e = event || window.event;
             target = e.srcElement? e.srcElement : e.target;
@@ -292,25 +362,31 @@
             var activeCate = $('.active')
             var className = activeCate.className.split(' ')[0]
             if (title && date && description) {
-                //以时间毫秒数给每个task加一个id
-                var id = new Date().getTime();
-                var tempData = {
-                    id : id,
-                    code: "1",
-                    title: title,
-                    date: date,
-                    description: description,
-                    className: className
+                if (testDate(date)) {
+                    //以时间毫秒数给每个task加一个id
+                    var id = new Date().getTime();
+                    var tempData = {
+                        id : id,
+                        code: "1",
+                        title: title,
+                        date: date,
+                        description: description,
+                        className: className
+                    }
+                    data[id] = tempData;
+                    //storage each task info
+                    storage.setItem("todoData", JSON.stringify(data));
+                    init.showTaskList();
+                    $('#'+defaults.sureCancle).style.display = 'none';
                 }
-                data[id] = tempData;
-                //storage each task info
-                storage.setItem("todoData", JSON.stringify(data));
-                init.showTaskList();
+                else {
+                    alert('日期格式错误，请按照YYYY/MM/DD格式填写')
+                }
             }
             //信息填写不全
             else {
+                alert('信息填写不全')
                 return false
-
             }
         },
         editTask: function () {
@@ -329,7 +405,7 @@
                 init.showTaskList();
                 $('#'+defaults.sureCancle).style.display = 'none';
             })
-
+                //$('#'+defaults.sureCancle).style.display = 'none';
         },
         taskComplete: function () {
             var id = $('#' + defaults.taskName).className
@@ -394,6 +470,26 @@
         }
     }
 
+    function testDate (date) {
+        //正则检查格式 不包含闰年检测 闰年检测用if语句完成
+        if(/2\d{3}\/((0?[13578]|1[012])\/(0?[1-9]|[12][0-9]|3[01])|(0?[469]|11)\/(0?[1-9]|[12][0-9]|3[01])|0?2\/(0?[1-9]|[12][0-9]))$/.test(date)){
+            console.log('a')
+            var dateInputArr = date.split("/")//整理输入的时间为数组
+            var inputYear = parseInt(dateInputArr[0]),//取得输入的年份
+                inputMonth = parseInt(dateInputArr[1])-1,//-1是为了符合Date类型格式
+                inputDay = parseInt(dateInputArr[2]);
+            if ((inputYear%4 != 0 || inputYear%400 != 0) && inputMonth ==1 && inputDay == 29) {
+                return false
+            } else {
+                return true
+            }
+        }
+        else {
+            return false
+        }
+    }
+
+
     //all event Listener
     function allbind () {
         //add category
@@ -406,30 +502,14 @@
         $.on('#'+defaults.addCateL2, 'click', function () {
             $('#'+defaults.addCateL2Overlay).style.display = 'block';
         })
+        //点击删除子目录
+        $.on('#'+defaults.delCateL2, 'click', operateCategory.deleteCategoryLevel2)
         //右键点击显示Menu
         $.on('#'+defaults.cateL1Li, 'mousedown', operateCategory.showRightmenu)
         //save sub category
         $.on('#'+defaults.addCateL2Sub, 'click', operateCategory.addCategoryLevel2)
         
-        var allTask = getByClass(defaults.cateL2);
-        //add taskClick method to all task
-        each(allTask, taskClick);
-        function taskClick (ele) {
-            $.on(ele, 'click', function () {
-                //remove all objects' 'active' class
-                for (var i = allTask.length - 1; i >= 0; i--) {
-                    removeClass(allTask[i], 'active')
-                };
-                //sub category click hightlight
-                addClass(ele, 'active')
-                //show the choosed task
-                var choosedClass = ele.className.split(' ')[0];
-                $('.task-wrapper').innerHTML = '<div id="pending"></div><div id="completed"></div>';
-                init.showTaskList();
-                //显示该分类下第一个任务
-                init.showTaskDetail();
-            })
-        }
+        
 
         //add task
         $.on('#'+defaults.addTask, 'click', function () {
@@ -444,7 +524,12 @@
         $.on('#'+defaults.cancle, 'click', operateTask.cancleEditTask)
         //edit task
         $.on('#'+defaults.editTask, 'click', operateTask.editTask)
-        $.on('#'+defaults.taskComplete, 'click' ,operateTask.taskComplete);
+        $.on('#'+defaults.taskComplete, 'click' ,function () {
+            var sure = confirm("确定已经完成吗")
+            if (sure == true) {
+            operateTask.taskComplete();
+            }
+        })
         $.on('#'+defaults.pendingBtn, 'click', operateTask.chooseCode)
         $.on('#'+defaults.completedBtn, 'click', operateTask.chooseCode)
         $.on('#'+defaults.allBtn, 'click', operateTask.chooseCode)
@@ -454,6 +539,8 @@
         $.on(getByClass('cancle', $('#'+defaults.cateOverlay))[0], 'click', function () {
             $('#'+defaults.cateOverlay).style.display = 'none'
         })
+        $.delegate('#'+defaults.cateL1Li, 'p', 'click', operateCategory.deleteCategory);
+
     }
     allbind();
 })()
