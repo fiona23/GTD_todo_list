@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>todo list</title>
     <link rel="stylesheet" href="css/style.css" type="text/css">
+    <!--[if lt IE9]> 
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 </head>
 <body>
  <header>
@@ -42,7 +45,7 @@
  <article>
 
     <div id="task-header-line">
-        <input id="task-name" type="text" disabled="disabled">
+        <input id="task-name" type="text" disabled="disabled" placeholder="请输入任务名称">
         <img id="complete" src="img/check.png" alt="complete">
         <img id="edit" src="img/edit.png" alt="edit">
     </div>

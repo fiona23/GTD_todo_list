@@ -329,7 +329,7 @@
                 init.showTaskDetail();
             }
         },
-        showRightmenu: function () {
+        showRightmenu: function (event) {
             var e = event || window.event;
             target = e.srcElement? e.srcElement : e.target;
             if (e.pageX || e.pageY) {

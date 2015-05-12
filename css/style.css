@@ -3,8 +3,9 @@
     padding: 0;
     font-size: 14px;
     box-sizing:border-box;
+    font-family: "Microsoft Yahei";
 }
-
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
 body,html{
     height: 100%;
 }
@@ -79,7 +80,6 @@ body,html{
         background-color: #f00;
         color: #fff;
         text-align: center;
-        font-family: "Microsoft Yahei";
         font-weight: bold;
         cursor: pointer;
     }
@@ -141,16 +141,32 @@ aside {
         #category-level1-list li {
             position: relative;
         }
-
+    .category-level1 {
+        padding-top: 5px;
+        line-height: 30px;
+    }
+    .category-level2 {
+        height: 25px;
+        line-height: 25px;
+        padding-left: 10px;
+        margin: 2px 0 2px 0;
+    }
     #category-level1-list .category-level2-list {
         list-style: url(../img/file.png);
         position: relative;
     }
+    
+    .category-level2 {
 
-    #category-level1-list .category-level2-list.active {
+    }
+            .category-level2:hover {
+                background-color: #fff;
+            }
+
+    /*#category-level1-list .category-level2-list.active {
         height: auto;
     }
-
+*/
         .category-level2-list .active {
             background-color: #fff;
         }
@@ -164,25 +180,23 @@ aside {
         list-style: none;
         cursor: pointer;
         display: none;
+        border: 1px solid #ddd;
+        border-radius: 4px;
     }
 
         #right-mouse-btn li {
             padding: 5px 10px;
-            border: 1px solid #ddd;
+            
+        }
+
+        #right-mouse-btn li:hover {
+            background-color: #FAFAEE;
         }
     #add-category-level2-overlay {
         display: none;
     }
     
-    .category-level1 {
-        padding-top: 5px;
-        line-height: 30px;
-    }
-    .category-level2 {
-        height: 25px;
-        line-height: 25px;
-        padding-left: 10px;
-    }
+    
 
     p.delete-category-btn {
         list-style: none;
@@ -194,6 +208,7 @@ aside {
         top: 10px;
         cursor: pointer;
         display: none;
+        margin-top: 5px;
     }
 
     .category-name:hover p.delete-category-btn{
@@ -306,7 +321,6 @@ article {
             float: left;
             margin-right: -120px;
             font-size: 25px;
-            font-weight: bold;
             padding-left: 10px;
             background-color:#ddd;
             border: none;
