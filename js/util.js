@@ -1,86 +1,68 @@
-//删除掉了测试用例
-
-//判断arr是否为一个数组，并返回一个bool值
-function isArray (arr) {
-    var result = arr instanceof Array;
-    return result;
+var util = function (selector, context) {
+    return new Util(selector, context)
 }
 
-var arr = [];
+var Util = function (selector, context) {
+    if (typeof selector === 'string') {
+        for (i in $(selector, context)){
+            this.push($(selector, context)[i]);
+        }
+        return this;
+    } else if (selector.nodeType){
+        return this.push(selector);
+    }
+}
 
-// 判断fn是否为一个函数，返回一个bool值
-function isFunction(fn) {
-    if(typeof fn == 'function'){
-        return true;
-    } else {
+Util.prototype = {
+    length: 0,
+    push: [].push,
+    sort: [].sort,
+    splice: [].splice,
+    hasClass: function (className) {
+        var classNames = this[0].className;
+        if(!classNames) {
+            return false;
+        }
+        classNames = classNames.split(/\s+/);
+        for (var i = classNames.length - 1; i >= 0; i--) {
+            if (classNames[i] === className) {
+                return true;
+            };                
+        }
         return false;
+    },
+    // 为dom增加一个样式名为newClassName的新样式
+    addClass: function (newClassName) {
+
+        if (!this.hasClass(newClassName)) {
+            this[0].className += " "+ newClassName
+            this[0].className = util.trim(this[0].className);
+        };
+        return this;
+    },
+
+    // 移除dom中的样式oldClassName
+    removeClass: function (oldClassName) {
+         if (this.hasClass(oldClassName)) {
+            this[0].className = this[0].className.replace(oldClassName,"");
+            this[0].className = util.trim(this[0].className);
+         };
+         return this;
+    },
+    append: function (ele) {
+        this[0].appendChild(ele)
+    },
+    eq: function (k) {
+        var newArr = util.cloneObject(this);
+        newArr.length = this.length;
+        newArr.splice(0, k);
+        newArr.splice(1, newArr.length);
+        return newArr;
     }
 }
 
-function isDate (date) {
-    return date instanceof Date;
-}
-
-function isRegExp (regexp) {
-    return regexp instanceof RegExp;
-}
-
-// 使用递归来实现一个深度克隆，可以复制一个目标对象，返回一个完整拷贝
-// 被复制的对象类型会被限制为数字、字符串、布尔、日期、数组、Object对象。不会包含函数、正则对象等
-
-//检测对象类型
-function istype (ele) {
-    if(ele===null) return "Null";
-    if(ele===undefined) return "Undefined";
-    return Object.prototype.toString.call(ele).slice(8,-1);
-}
-
-//深度克隆
-function cloneObject(src) {
-    var srcType = istype(src);
-    var result,k;
-    //判断需要克隆的对象是否是Object类型或者Array类型
-    if(srcType === "Object" || srcType === "Array"){
-        result = srcType === "Object"? {}:[];
-        for(k in src){
-            result[k] = cloneObject(src[k])
-        }
-        return result;
-    } else if (srcType === "Function" || "RegExp"){//如果是函数或者正则表达式则不复制
-        return false;
-    } else {     //普通类型直接浅复制
-        result = src;
-        return result;
-    }
-
-}
-
-
-
-// 对数组进行去重操作，只考虑数组中元素为数字或字符串，返回一个去重后的数组
-function uniqArray(arr) {
-    var length = arr.length;
-    var newArr = [];
-    var k;//标记是否出现相同元素
-    for (var i=0; i<length; i++){
-        k = true;
-        for(var j=0; j<i; j++){
-            if (arr[i] == newArr[j]){
-                k = false;
-            }
-        }
-        if(k === true){
-            newArr.push(arr[i])
-        }
-    }
-    return newArr;
-}
-
-
-// 对字符串头尾进行空格字符的去除、包括全角半角空格、Tab等，返回一个字符串
-// 先暂时不要简单的用一句正则表达式来实现
-function trim(str) {
-    if (istype(str) !== 'String'){return false;}
+util.trim = function (str) {
+    if (this.istype(str) !== 'String'){return false;}
     var whitespace = "\t\n\r "
     var newstr = "";
     //去除头的空格
@@ -103,8 +85,75 @@ function trim(str) {
 }
 
 
+util.isFunction = function (fn) {
+    if(typeof fn == 'function'){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+util.isArray = function (arr) {
+    var result = arr instanceof Array;
+    return result;
+}
+
+util.isDate = function (date) {
+    return date instanceof Date;
+}
+
+util.isRegExp = function (regexp) {
+    return regexp instanceof RegExp;
+}
+
+util.istype = function(ele) {
+    if(ele===null) return "Null";
+    if(ele===undefined) return "Undefined";
+    return Object.prototype.toString.call(ele).slice(8,-1);
+}
+
+//深度克隆
+util.cloneObject = function (src) {
+    var srcType = this.istype(src);
+    var result,k;
+    //判断需要克隆的对象是否是Object类型或者Array类型
+    if(srcType === "Object" || srcType === "Array"){
+        result = srcType === "Object"? {}:[];
+        for(k in src){
+            result[k] = this.cloneObject(src[k])
+        }
+        return result;
+    } else {     //普通类型直接浅复制
+        result = src;
+        return result;
+    }
+
+}
+
+util.uniqArray = function (arr) {
+    var length = arr.length;
+    var newArr = [];
+    var k;//标记是否出现相同元素
+    for (var i=0; i<length; i++){
+        k = true;
+        for(var j=0; j<i; j++){
+            if (arr[i] == newArr[j]){
+                k = false;
+            }
+        }
+        if(k === true){
+            newArr.push(arr[i])
+        }
+    }
+    return newArr;
+}
+
+
+
+
+
 // 实现一个遍历数组的方法，针对数组中每一个元素执行fn函数，并将数组索引和元素作为参数传递
-function each(arr, fn) {
+util.each = function (arr, fn) {
     //  if(!isArray(arr)){
     //     return false;
     // }
@@ -119,7 +168,7 @@ function each(arr, fn) {
 
 // 获取一个对象里面第一层元素的数量，返回一个整数
        
-function getObjectLength(obj) {
+util.getObjectLength = function (obj) {
     var key,
     a=0;
     for (key in obj){
@@ -130,28 +179,18 @@ function getObjectLength(obj) {
 
 
 // 判断是否为邮箱地址
-function isEmail(emailStr) {
+util.isEmail = function (emailStr) {
     var emailTest = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]$/;
     return emailTest.test(emailStr);
 }
 
 // 判断是否为手机号
-function isMobilePhone(phone) {
+util.isMobilePhone = function (phone) {
     var phoneTest = /^1[0-9]{10}$/;
     return phoneTest.test(phone);
 }
 
-// 为dom增加一个样式名为newClassName的新样式
-function addClass(element, newClassName) {
-    element.className += " "+ newClassName
-    element.className = trim(element.className)
-}
 
-// 移除dom中的样式oldClassName
-function removeClass(element, oldClassName) {
-     element.className = element.className.replace(oldClassName,"");
-     element.className = trim(element.className)
-}
 
 
 // 判断siblingNode和dom是否为同一个父元素下的同一级的元素，返回bool值
@@ -164,112 +203,12 @@ function getPosition(element) {
     return {x: element.scrollLeft, y:element.scrollTop}
 }
 
-//获取所有满足class选择器的所有dom，不是作业要求
-function getByClass(selector, parent){
-    var classResult = []
-    if (parent) {
-        parent = parent 
-    } else {
-        parent = document
-    }
-    var oClass = parent.getElementsByTagName('*')
-    for (var i=0; i<oClass.length; i++){
-        var classArr = trim(oClass[i].className).split(" ")
-        for (var j = classArr.length - 1; j >= 0; j--) {
-            if (classArr[j] === selector) {
-                classResult.push(oClass[i]);
-                break;
-            }
-        }
-    }
-    return classResult;
-}
-
-
-// 实现一个简单的Query
-function $(selector) {
-    if(/^\#[^\#\.\=]+$/.test(selector)){//排除嵌套的情况
-        //id选择器
-        selector = selector.replace('#', '').replace('/\.[a-zA-Z0-9\-]/','');
-        return document.getElementById(selector)
-    } else if(/^\.[^\#\.\=]+$/.test(selector)){//排除嵌套的情况
-        //class选择器
-        selector = selector.replace('.', '')
-        var oClass = document.getElementsByTagName('*');
-        var classResult = []
-        oClass = document.getElementsByTagName('*')
-        for (var i=0; i<oClass.length; i++){
-            var classArr = oClass[i].className.split(" ")
-            for (var j = classArr.length - 1; j >= 0; j--) {
-                if (classArr[j] === selector) {
-                    classResult.push(oClass[i]);
-                    break;
-                }
-            }
-        }
-        return classResult[0];
-
-    } else if (/\[[a-zA-Z0-9\-\=]+\]/.test(selector)){
-        if (/\=/.test(selector)){ 
-            var oAttrValue = selector.slice(selector.search(/\=/)+1, -1);
-            selector = selector.replace('\[', '').replace(/\=+[\w\]]+/, '');
-            var oAttr = document.getElementsByTagName('*');
-            var oAttrResult = [];
-            for (var j=0; j<oAttr.length; j++){
-                if (oAttr[j].getAttribute(selector) == oAttrValue ){
-                    oAttrResult.push(oAttr[j])
-                }
-            }
-            return oAttrResult[0];
-        } else {
-            //去除中括号
-            selector = selector.replace(/\[([^\[\]]*)\]/, '$1');
-            var oAttr = document.getElementsByTagName('*');
-            var oAttrResult = [];
-            for (var j=0; j<oAttr.length; j++){
-                if (oAttr[j].getAttribute(selector)){
-                    oAttrResult.push(oAttr[j])
-                }
-            }
-            return oAttrResult[0];
-        } 
-    // } else if(trim(selector).split(" ").length > 1){
-    //         var reAttr = trim(selector).split(/\s+/)//将每个选择器分割成数组
-    //         var lastSelector = reAttr[reAttr.length-1].replace(".","")//去掉最后一个class选择器的点
-    //         var oAttrResult = getByClass(lastSelector)//数组保存所有满足最后一个class选择器的dom
-    //         for (var j=0; j<oAttrResult.length; j++){
-    //             parentFilter(oAttrResult[j], reAttr)
-    //         }
-    }else {
-            return document.getElementsByTagName(selector)[0]
-    }
-}
-
-// function parentFilter (child, selectArr) {
-//     var parent = child.parentNode; //保存父节点,会更新
-//     for (var i = selectArr.length - 2; i >= 0; i--) {
-//         parentCompare(parent, selectArr[i])
-//     }
-// }
-
-// function parentCompare (parent,selector) {
-//     if (parent.className == selector) {
-//         parent = parent.parentNode;
-//     } else {
-//         return false
-//         //break;
-//     }
-// }
-
-
-
-    
 
 // 给一个dom绑定一个针对event事件的响应，响应函数为listener
-$.on = function(selector, event, listener){
+util.on = function(selector, event, listener){
     //如果输入的是选择器，就转为dom
     if (typeof selector === 'string') {
-        selector = $(selector)
+        selector = $(selector)[0]
     }
     if (selector.addEventListener) {
         selector.addEventListener(event, listener, false);
@@ -287,9 +226,9 @@ $.on = function(selector, event, listener){
 //}
 
 // 移除dom对象对于event事件发生时执行listener的响应，当listener为空时，移除所有响应函数
-$.un = function(selector, event, listener){
+util.un = function(selector, event, listener){
     if (typeof selector === 'string') {
-        selector = $(selector)
+        selector = $(selector)[0]
     }
     if(listener){
         if (selector.removeEventListener) {
@@ -305,13 +244,13 @@ $.un = function(selector, event, listener){
 }
 
 // 实现对click事件的绑定
-$.click = function(selector, listener){
-    $.on(selector,"click", listener)
+util.click = function(selector, listener){
+    util.on(selector,"click", listener)
 }
 
 // 实现对于按Enter键时的事件绑定
-$.enter = function(selector, listener){
-    $.on(selector,"onkeydown", function () {
+util.enter = function(selector, listener){
+    util.on(selector,"onkeydown", function () {
         if(keyCode == 13){
             listener()
         } else {
@@ -324,7 +263,7 @@ $.enter = function(selector, listener){
 
 // 先简单一些
 function delegateEvent(selector, tag, eventName, listener) {
-    $.on(selector, eventName, function (event) {
+    util.on(selector, eventName, function (event) {
         var e = event || window.event;
         target = e.srcElement? e.srcElement : e.target;
         if(target.tagName.toLowerCase() === tag){
@@ -334,7 +273,7 @@ function delegateEvent(selector, tag, eventName, listener) {
     })
 }
 
-$.delegate = delegateEvent;
+util.delegate = delegateEvent;
 
 
 // 判断是否为IE浏览器，返回-1或者版本号
@@ -401,22 +340,180 @@ function ajax(url, options) {
         };
     }
 }
-// 使用示例：
-/*ajax(
-    'http://localhost:8080/server/ajaxtest', 
-    {
-        data: {
-            name: 'simon',
-            password: '123456'
-        },
-        onsuccess: function (responseText, xhr) {
-            console.log(responseText);
-        }
-    }
-);*/
-/*options是一个对象，里面可以包括的参数为：
 
-type: post或者get，可以有一个默认值
-data: 发送的数据，为一个键值对象或者为一个用&连接的赋值字符串
-onsuccess: 成功时的调用函数
-onfail: 失败时的调用函数*/
+
+
+function $(selector, context) {
+    var idReg = /^#([\w_\-]+)/;
+    var classReg = /^\.([\w_\-]+)/;
+    var tagReg = /^\w+$/i;
+    // [data-log]
+    // [data-log="test"]
+    // [data-log=test]
+    // [data-log='test']
+    var attrReg = /(\w+)?\[([^=\]]+)(?:=(["'])?([^\]"']+)\3?)?\]/;
+
+    // 不考虑'>' 、`~`等嵌套关系
+    // 父子选择器之间用空格相隔
+    var context = context || document;
+
+    function blank() {}
+    function hasClass(element, className) {
+        var classNames = element.className;
+        if (!classNames) {
+            return false;
+        }
+        classNames = classNames.split(/\s+/);
+        for (var i = 0, len = classNames.length; i < len; i++) {
+            if (classNames[i] === className) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function direct(part, actions) {
+        actions = actions || {
+            id: blank,
+            className: blank,
+            tag: blank,
+            attribute: blank
+        };
+        var fn;
+        var params = [].slice.call(arguments, 2);
+        // id
+        if (result = part.match(idReg)) {
+            fn = 'id';
+            params.push(result[1]);
+        }
+        // class
+        else if (result = part.match(classReg)) {
+            fn = 'className';
+            params.push(result[1]);
+        }
+        // tag
+        else if (result = part.match(tagReg)) {
+            fn = 'tag';
+            params.push(result[0]);
+        }
+        // attribute
+        else if (result = part.match(attrReg)) {
+            fn = 'attribute';
+            var tag = result[1];
+            var key = result[2];
+            var value = result[4];
+            params.push(tag, key, value);
+        }
+        return actions[fn].apply(null, params);
+    }
+
+    function find(parts, context) {
+        var part = parts.pop();
+
+        var actions = {
+            id: function (id) {
+                return [
+                    document.getElementById(id)
+                ];
+            },
+            className: function (className) {
+                var result = [];
+                if (context.getElementsByClassName) {
+                    result = context.getElementsByClassName(className)
+                }
+                else {
+                    var temp = context.getElementsByTagName('*');
+                    //console.log(temp)
+                    for (var i = 0, len = temp.length; i < len; i++) {
+                        var node = temp[i];
+                        if (hasClass(node, className)) {
+                            result.push(node);
+                        }
+                    }
+                }
+                return result;
+            },
+            tag: function (tag) {
+                return context.getElementsByTagName(tag);
+            },
+            attribute: function (tag, key, value) {
+                var result = [];
+                var temp = context.getElementsByTagName(tag || '*');
+
+                for (var i = 0, len = temp.length; i < len; i++) {
+                    var node = temp[i];
+                    if (value) {
+                        var v = node.getAttribute(key);
+                        (v === value) && result.push(node);
+                    }
+                    else if (node.hasAttribute(key)) {
+                        result.push(node);
+                    }
+                }
+                return result;
+            }
+        };
+
+        var ret = direct(part, actions);
+
+        // to array
+        ret = [].slice.call(ret);
+
+        return parts[0] && ret[0] ? filterParents(parts, ret) : ret;
+    }
+
+    function filterParents(parts, ret) {
+        var parentPart = parts.pop();
+        var result = [];
+
+        for (var i = 0, len = ret.length; i < len; i++) {
+            var node = ret[i];
+            var p = node;
+
+            while (p = p.parentNode) {
+                var actions = {
+                    id: function (el, id) {
+                        return (el.id === id);
+                    },
+                    className: function (el, className) {
+                         return hasClass(el, className);
+                    },
+                    tag: function (el, tag) {
+                        return (el.tagName.toLowerCase() === tag);
+                    },
+                    attribute: function (el, tag, key, value) {
+                        var valid = true;
+                        if (tag) {
+                            valid = actions.tag(el, tag);
+                        }
+                        valid = valid && el.hasAttribute(key);
+                        if (value) {
+                            valid = valid && (value === el.getAttribute(key))
+                        }
+                        return valid;
+                    }
+                };
+                var matches = direct(parentPart, actions, p);
+
+                if (matches) {
+                    break;
+                }
+            }
+
+            if (matches) {
+                result.push(node);
+            }
+        }
+
+        return parts[0] && result[0] ? filterParents(parts, result) : result;
+    }
+
+    var result = find(selector.split(/\s+/), context);
+    return result;
+}
+
+if ( typeof define === "function" && define.amd ) {
+    define(function() {
+        return util;
+    });
+}
