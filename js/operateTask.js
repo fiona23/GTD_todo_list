@@ -80,7 +80,10 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                 }
             },
             editTask: function (e) {
-                $('#'+defaults.sureCancle)[0].style.display = 'block';
+                $('#sure')[0].style.display = 'inline-block';
+                $('#cancle')[0].style.display = 'inline-block';
+                $('#complete')[0].style.display = 'none';
+                $('#edit')[0].style.display = 'none';
                 changeInputState(e);
                 $.on('#'+defaults.sure, 'click', function () {
                     //update local storage
@@ -93,9 +96,9 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                     data[id]['description'] = description;
                     storage.setItem("todoData", JSON.stringify(data));
                     init.showTaskList();
+                    init.showDetail();
                     $('#'+defaults.sureCancle)[0].style.display = 'none';
                 })
-                    //$('#'+defaults.sureCancle).style.display = 'none';
             },
             taskComplete: function () {
                 var id = $('#' + defaults.taskName)[0].className
@@ -117,22 +120,29 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                 target = e.srcElement? e.srcElement : e.target;
                 for (var i = $('.codes', $('#codes-line')[0]).length - 1; i >= 0; i--) {
                     $('.codes', $('#codes-line')[0]).eq(i).removeClass('active')
-                    //removeClass(getByClass('codes', $('#codes-line'))[i], 'active')
                 };
                 $(target).addClass('active');
                 var pending = new RegExp(defaults.pending)
                 var completed = new RegExp(defaults.completed)
                 if (pending.test(target.id)) {
-                    $('#'+defaults.pending)[0].style.display = 'block'
-                    $('#'+defaults.completed)[0].style.display = 'none'
+                    $('#pending')[0].style.display = 'block';
+                    $('#completed')[0].style.display = 'none';
+                    $('#all')[0].style.display = 'none'
                 }
                 else if (completed.test(target.id)) {
-                    $('#'+defaults.completed)[0].style.display = 'block'
-                    $('#'+defaults.pending)[0].style.display = 'none'
+                    $('#completed')[0].style.display = 'block';
+                    $('#pending')[0].style.display = 'none';
+                    $('#all')[0].style.display = 'none'
+                } else if (/all/.test(target.id)){
+                    //show all task
+                    $('#'+defaults.pending)[0].style.display = 'none';
+                    $('#'+defaults.completed)[0].style.display = 'none';
+                    $('#all')[0].style.display = 'block'
                 } else {
                     //show all task
-                    $('#'+defaults.pending)[0].style.display = 'block';
-                    $('#'+defaults.completed)[0].style.display = 'block'
+                    $('#'+defaults.pending)[0].style.display = 'none';
+                    $('#'+defaults.completed)[0].style.display = 'none';
+                    $('#all')[0].style.display = 'block'
                 }
             },
             

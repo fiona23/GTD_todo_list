@@ -1,0 +1,385 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+    box-sizing:border-box;
+    font-family: "Microsoft Yahei";
+}
+article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
+body,html{
+    height: 100%;
+    background-color: #f1f1f1;
+}
+
+
+@high-light: #a4c68a;
+@deep-green: #22442c;
+.section-width {
+    width: 21%;
+    margin: 0 0 0 1%;
+    min-width: 230px;
+    background-color: #fff;
+    border-radius: 5px;
+}
+
+.high-light-task {
+    background-color: @high-light;
+    color: #fff;
+}
+
+.bottom-add {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 20px;
+    width: 100%;
+    background-color: #ddd;
+    i {
+        cursor: pointer;
+        padding-right: 20px;
+    }
+}
+
+li {
+    list-style: none;
+}
+.overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.3);
+    display: none;
+}
+.overlay .black {
+    position: absolute;
+    top:35%;
+    left: 40%;
+    width: 400px;
+    height: 230px;
+    border-radius: 5px;
+    background-color: #f6f6f6;
+    -moz-box-shadow: 10px 10px 10px #888888; /* 老的 Firefox */
+    box-shadow: 10px 10px 10px #888888;
+}
+
+    .overlay-content {
+        padding: 20px;
+        margin: 0 auto;
+    }
+
+    .overlay p {
+        border-bottom: 1px solid #ccc;
+        padding-bottom: 15px;
+    }
+    
+    .overlay .name-label {
+        display: block;
+        margin-top: 20px;
+    }
+    .overlay .name-input {
+        display: block;
+        margin: 20px auto;
+        width: 100%;
+        height: 30px;
+    }
+    .overlay .sub-input {
+        display: block;
+        margin: 20px auto;
+        width: 100%;
+        height: 30px;
+        background-color: #7AC240;
+        border: none;
+        color: #fff;
+        -webkit-transition: all 0.4s ease-in-out;
+        -moz-transition: all 0.4s ease-in-out;
+        -o-transition: all 0.4s ease-in-out;
+        transition: all 0.4s ease-in-out; 
+        cursor: pointer;
+    }
+
+        .overlay .sub-input:hover {
+            background-color: #297F36;
+        }
+
+    .overlay .cancle {
+        position: absolute;
+        left: 386px;
+        top: -15px;
+        color: #222;
+        cursor: pointer;
+    }
+
+header {
+    height: 320px;
+    background: url(../img/banner.png);
+    min-width: 920px;
+    position: absolute;
+    width: 100%;
+    h1 {
+        font: normal 30px/60px "Microsoft Yahei";
+        color: #fff;
+        padding-top: 100px;
+        text-align: center;
+    }
+}
+
+
+
+#content {
+    position: relative;
+    height: 100%;
+    padding-top: 330px;
+
+}
+
+aside {
+    .section-width;
+    float: left;
+    position: relative;
+    min-height: 100%;
+    #add-category {
+        cursor: pointer;
+        padding-right: 10px;
+    }
+    .fa {
+        padding: 0 12px 0 12px;
+    }
+}
+
+    .add-category {
+        .bottom-add
+    } 
+    
+    aside p {
+        line-height: 30px;
+        padding-left: 5px;
+    }
+    #category-level1-list {
+        position: relative;
+        li {
+            position: relative;
+        }
+    }
+    .category-level1 {
+        padding-top: 5px;
+        line-height: 30px;
+    }
+    #category-level1-list .category-level2-list {
+        position: relative;
+    }
+    .category-level2 {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 0 0 25px;
+        margin: 2px 0 2px 0;
+        cursor: pointer;
+        &:hover {
+                .high-light-task
+            }
+        &.active {
+            .high-light-task;
+        }   
+    }
+
+
+    #right-mouse-btn {
+        position: absolute;
+        width: 150px;
+        text-align: center;
+        background-color: #fff;
+        z-index: 10000;
+        list-style: none;
+        cursor: pointer;
+        display: none;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        li {
+            padding: 5px 10px;
+            &:hover {
+                background-color: #FAFAEE;
+            }
+        }
+    }
+
+    #add-category-level2-overlay {
+        display: none;
+    }
+    
+    
+
+    p.delete-category-btn {
+        list-style: none;
+        background: url(../img/x.png) no-repeat;
+        position: absolute;
+        height: 25px;
+        width: 25px;
+        right: 10px;
+        top: 10px;
+        cursor: pointer;
+        display: none;
+        margin-top: 5px;
+    }
+
+    .category-name:hover p.delete-category-btn{
+        display: block;
+    }
+
+section {
+    .section-width;
+    float: left;
+    position: relative;
+    min-height: 100%;
+    overflow: hidden;
+}
+    .task-wrapper {
+        padding-bottom: 70px;
+    }
+
+    .add-task {
+        .bottom-add
+    }
+
+
+
+
+    #codes-line {
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        background-color: @high-light;
+        padding-left: 10px;
+        box-sizing: border-box;
+    }
+
+        .codes {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+            .codes.active {
+                background-color: #fff;
+                border-radius: 5px;
+            }
+
+    .one-day-task p{
+        list-style: none;
+        padding: 10px;
+        height: 40px;
+        line-height: 20px;
+        background-color: #f1f1f1;
+    }
+
+        .one-day-task ol li{
+            background-color: #fff;
+            padding: 10px 0 10px 25px;
+            height: 40px;
+            line-height: 20px;
+            cursor: pointer;
+            list-style: none;
+            &:hover, &.active-task{
+                background-color: #d5f6bb;
+            }
+        }
+
+    #completed .one-day-task p {
+        background-color: #f5f5f5;
+    }
+    #pending {
+        display: none;
+    }
+    #completed {
+        display: none;
+    }
+article {
+    width: 54%;
+    margin: 0 1% 0 45%;
+    min-width: 460px;
+    position: relative;
+    min-height: 100%;
+    
+}
+    #sure, #cancle {
+        display: none;
+    }   
+
+    .task-btn {
+        cursor: pointer;
+        &.fa {
+            line-height: 50px;
+            padding: 0 12px 0 12px;
+            cursor: pointer;
+            color: @deep-green;
+            &:hover{
+                color: @high-light;
+            };
+        }
+    }
+        #task-header-line {
+            overflow: hidden;
+        }
+        #task-name {
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            float: left;
+            margin: 0 -120px 10px 0;
+            font-size: 25px;
+            padding-left: 10px;
+            background-color:#fff;
+            border: none;
+            outline: none;
+            border-radius: 5px;
+        }
+
+        #task-header-line img{
+            float: left;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        #date-line {
+            background-color: #fff;
+            height: 50px;
+            line-height: 50px;
+            overflow: hidden;
+            margin: 0px 0 10px 0;
+            border-radius: 5px;
+            label {
+                width: 100px;
+                padding-left: 10px;
+                float: left;
+                margin-right: -100%;
+            }
+        }
+            #datepicker {
+                background-color: transparent;
+                height: 50px;
+                border: none;
+                width: 100%;
+                float: left;
+                padding-left: 130px;
+            }
+
+            .task-content{
+                position: absolute;
+                top: 120px;
+                right: 0px;
+                left: 0;
+                bottom: 0;
+                background: #fff;
+                border-radius: 5px;
+            }
+
+            #task-description {
+                width: 100%;
+                resize: none;
+                border: none;
+                bottom: 0;
+                background-color: #fff;
+                outline: none;
+                padding: 10px;
+                box-sizing: border-box;
+            }
