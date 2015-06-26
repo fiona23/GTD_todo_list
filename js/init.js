@@ -1,6 +1,6 @@
 define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, categoryData, data) {
         var storage = window.localStorage;
-        console.log(data)
+        console.log($)
         var codes = {
             "1" : "#pending",
             "2" : "#completed",
