@@ -43,12 +43,7 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
 
         //add task
         $.on('#'+defaults.addTask, 'click', function (e) {
-            //show sure and cancle btn
-            $('#'+defaults.sureCancle)[0].style.display = 'block';
-            operateTask.changeInputState(e);
-            //save task
-            $.on('#'+defaults.sure, 'click', operateTask.addTask);
-            
+            operateTask.addTask(e)
         })
         //cancle edit/add task
         $.on('#'+defaults.cancle, 'click', operateTask.cancleEditTask)

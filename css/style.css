@@ -21,30 +21,43 @@ body,
 html {
   height: 100%;
   background-color: #f1f1f1;
+  min-width: 980px;
 }
 .section-width {
   width: 21%;
   margin: 0 0 0 1%;
-  min-width: 230px;
+  min-width: 200px;
   background-color: #fff;
   border-radius: 5px;
+  height: 100%;
+  overflow-y: scroll;
+  padding-bottom: 40px;
+  box-sizing: border-box;
+}
+.section-width::-webkit-scrollbar-thumb {
+  background: transparent;
 }
 .high-light-task {
   background-color: #a4c68a;
   color: #fff;
 }
 .bottom-add {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 40px;
   line-height: 40px;
-  padding-left: 20px;
-  width: 100%;
+  width: inherit;
+  min-width: 205px;
   background-color: #ddd;
+  cursor: pointer;
+  overflow-y: scroll;
+  box-sizing: border-box;
 }
 .bottom-add i {
-  cursor: pointer;
-  padding-right: 20px;
+  padding: 0 12px 0 12px;
+}
+.bottom-add:hover {
+  background-color: #eee;
 }
 li {
   list-style: none;
@@ -70,10 +83,6 @@ li {
   /* 老的 Firefox */
   box-shadow: 10px 10px 10px #888888;
 }
-.overlay-content {
-  padding: 20px;
-  margin: 0 auto;
-}
 .overlay p {
   border-bottom: 1px solid #ccc;
   padding-bottom: 15px;
@@ -93,9 +102,8 @@ li {
   margin: 20px auto;
   width: 100%;
   height: 30px;
-  background-color: #7AC240;
+  background-color: #a4c68a;
   border: none;
-  color: #fff;
   -webkit-transition: all 0.4s ease-in-out;
   -moz-transition: all 0.4s ease-in-out;
   -o-transition: all 0.4s ease-in-out;
@@ -103,7 +111,7 @@ li {
   cursor: pointer;
 }
 .overlay .sub-input:hover {
-  background-color: #297F36;
+  background-color: #d5f6bb;
 }
 .overlay .cancle {
   position: absolute;
@@ -112,10 +120,14 @@ li {
   color: #222;
   cursor: pointer;
 }
+.overlay-content {
+  padding: 20px;
+  margin: 0 auto;
+}
 header {
   height: 320px;
   background: url(../img/banner.png);
-  min-width: 920px;
+  min-width: 980px;
   position: absolute;
   width: 100%;
 }
@@ -130,35 +142,42 @@ header h1 {
   height: 100%;
   padding-top: 330px;
 }
+#content i {
+  padding: 0 12px 0 12px;
+}
 aside {
   width: 21%;
   margin: 0 0 0 1%;
-  min-width: 230px;
+  min-width: 200px;
   background-color: #fff;
   border-radius: 5px;
+  height: 100%;
+  overflow-y: scroll;
+  padding-bottom: 40px;
+  box-sizing: border-box;
   float: left;
   position: relative;
-  min-height: 100%;
 }
-aside #add-category {
-  cursor: pointer;
-  padding-right: 10px;
-}
-aside .fa {
-  padding: 0 12px 0 12px;
+aside::-webkit-scrollbar-thumb {
+  background: transparent;
 }
 .add-category {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 40px;
   line-height: 40px;
-  padding-left: 20px;
-  width: 100%;
+  width: inherit;
+  min-width: 205px;
   background-color: #ddd;
+  cursor: pointer;
+  overflow-y: scroll;
+  box-sizing: border-box;
 }
 .add-category i {
-  cursor: pointer;
-  padding-right: 20px;
+  padding: 0 12px 0 12px;
+}
+.add-category:hover {
+  background-color: #eee;
 }
 aside p {
   line-height: 30px;
@@ -208,14 +227,13 @@ aside p {
   padding: 5px 10px;
 }
 #right-mouse-btn li:hover {
-  background-color: #FAFAEE;
+  background-color: #d5f6bb;
 }
 #add-category-level2-overlay {
   display: none;
 }
 p.delete-category-btn {
   list-style: none;
-  background: url(../img/x.png) no-repeat;
   position: absolute;
   height: 25px;
   width: 25px;
@@ -226,34 +244,45 @@ p.delete-category-btn {
   margin-top: 5px;
 }
 .category-name:hover p.delete-category-btn {
+  background: url('../img/x.png') no-repeat;
   display: block;
 }
 section {
   width: 21%;
   margin: 0 0 0 1%;
-  min-width: 230px;
+  min-width: 200px;
   background-color: #fff;
   border-radius: 5px;
+  height: 100%;
+  overflow-y: scroll;
+  padding-bottom: 40px;
+  box-sizing: border-box;
   float: left;
   position: relative;
-  min-height: 100%;
-  overflow: hidden;
+}
+section::-webkit-scrollbar-thumb {
+  background: transparent;
 }
 .task-wrapper {
   padding-bottom: 70px;
 }
 .add-task {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   height: 40px;
   line-height: 40px;
-  padding-left: 20px;
-  width: 100%;
+  width: inherit;
+  min-width: 205px;
   background-color: #ddd;
+  cursor: pointer;
+  overflow-y: scroll;
+  box-sizing: border-box;
 }
 .add-task i {
-  cursor: pointer;
-  padding-right: 20px;
+  padding: 0 12px 0 12px;
+}
+.add-task:hover {
+  background-color: #eee;
 }
 #codes-line {
   width: 100%;
@@ -301,7 +330,8 @@ section {
 }
 article {
   width: 54%;
-  margin: 0 1% 0 45%;
+  margin: 0 1% 0 1%;
+  float: left;
   min-width: 460px;
   position: relative;
   min-height: 100%;
@@ -324,6 +354,7 @@ article {
 }
 #task-header-line {
   overflow: hidden;
+  width: 100%;
 }
 #task-name {
   width: 100%;
@@ -338,32 +369,28 @@ article {
   outline: none;
   border-radius: 5px;
 }
-#task-header-line img {
-  float: left;
-  padding: 10px;
-  cursor: pointer;
-}
 #date-line {
-  background-color: #fff;
-  height: 50px;
   line-height: 50px;
   overflow: hidden;
-  margin: 0px 0 10px 0;
-  border-radius: 5px;
+  width: 100%;
 }
 #date-line label {
   width: 100px;
   padding-left: 10px;
   float: left;
   margin-right: -100%;
+  background-color: #fff;
+  border-radius: 5px 0 0 5px;
 }
 #datepicker {
-  background-color: transparent;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 5px;
   height: 50px;
   border: none;
-  width: 100%;
   float: left;
-  padding-left: 130px;
+  margin-left: 100px;
+  margin-bottom: 10px;
 }
 .task-content {
   position: absolute;
@@ -383,4 +410,5 @@ article {
   outline: none;
   padding: 10px;
   box-sizing: border-box;
+  float: left;
 }

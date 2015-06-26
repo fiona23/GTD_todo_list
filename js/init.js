@@ -1,9 +1,6 @@
-define(['util', 'defaults', 'categoryData'], function ($, defaults, categoryData) {
+define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, categoryData, data) {
         var storage = window.localStorage;
-        var data = {};
-        if (storage.getItem("todoData")) {
-            data = JSON.parse(storage.getItem("todoData"));
-        }
+        console.log(data)
         var codes = {
             "1" : "#pending",
             "2" : "#completed",
@@ -79,7 +76,7 @@ define(['util', 'defaults', 'categoryData'], function ($, defaults, categoryData
             //clear task
             $(codes['1'])[0].innerHTML = '';
             $(codes['2'])[0].innerHTML = '';
-            console.log($('#all')[0].innerHTML)
+            $('#all')[0].innerHTML = '';
             var choosedClass = $('.active', $('#'+defaults.cateL1Li)[0])[0].className.split(' ')[0];
             var _data = JSON.parse(storage.getItem('todoData'))
             for (var params in _data){

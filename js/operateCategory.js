@@ -1,5 +1,4 @@
-define(['util', 'init','defaults', 'categoryData'], function ($, init, defaults,categoryData) {
-    var data = {};
+define(['util', 'init','defaults', 'categoryData', 'todoData'], function ($, init, defaults,categoryData, data) {
     var storage = window.localStorage;
     return operateCategory = {
         addCategory: function () {
@@ -87,7 +86,6 @@ define(['util', 'init','defaults', 'categoryData'], function ($, init, defaults,
         deleteCategoryLevel2: function () {
             var sure = confirm('删除目录，该目录下的所有任务也会被删除，确定吗');
             if (sure) {
-                console.log(target)
                 var needDeletetask = target.className.split(' ')[0];
                 var needDeleteParent = target.className.split(' ')[2]
                 delete categoryData[needDeleteParent]['child'][needDeletetask]
@@ -116,9 +114,11 @@ define(['util', 'init','defaults', 'categoryData'], function ($, init, defaults,
             }
             if (e.button === 2) {
                 //右键菜单
+                console.log(posy)
                 $('#'+defaults.rightBtn)[0].style.display = 'block';
-                $('#'+defaults.rightBtn)[0].style.left = posx + 2 + 'px';
-                $('#'+defaults.rightBtn)[0].style.top = posy - 59 + 'px';
+                $('#'+defaults.rightBtn)[0].style.left = posx - 20 + 'px';
+                $('#'+defaults.rightBtn)[0].style.top = posy - 330 + 'px';
+
             }
             //不是按下的右键
             else {

@@ -9,17 +9,26 @@ article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
 body,html{
     height: 100%;
     background-color: #f1f1f1;
+    min-width: 980px;
 }
 
 
 @high-light: #a4c68a;
 @deep-green: #22442c;
+@light-green: #d5f6bb;
 .section-width {
     width: 21%;
     margin: 0 0 0 1%;
-    min-width: 230px;
+    min-width: 200px;
     background-color: #fff;
     border-radius: 5px;
+    height: 100%;
+    overflow-y: scroll;
+    padding-bottom: 40px;
+    box-sizing: border-box;
+    &::-webkit-scrollbar-thumb {
+        background:transparent;
+    }
 }
 
 .high-light-task {
@@ -28,16 +37,21 @@ body,html{
 }
 
 .bottom-add {
-    position: absolute;
+    position: fixed;
     bottom: 0;
     height: 40px;
     line-height: 40px;
-    padding-left: 20px;
-    width: 100%;
+    width: inherit;
+    min-width: 205px;
     background-color: #ddd;
+    cursor: pointer;
+    overflow-y: scroll;
+    box-sizing: border-box;
     i {
-        cursor: pointer;
-        padding-right: 20px;
+        padding: 0 12px 0 12px;
+    }
+    &:hover {
+        background-color: #eee;
     }
 }
 
@@ -52,70 +66,65 @@ li {
     bottom: 0;
     background-color: rgba(0,0,0,0.3);
     display: none;
-}
-.overlay .black {
-    position: absolute;
-    top:35%;
-    left: 40%;
-    width: 400px;
-    height: 230px;
-    border-radius: 5px;
-    background-color: #f6f6f6;
-    -moz-box-shadow: 10px 10px 10px #888888; /* 老的 Firefox */
-    box-shadow: 10px 10px 10px #888888;
-}
-
-    .overlay-content {
-        padding: 20px;
-        margin: 0 auto;
+    .black {
+        position: absolute;
+        top:35%;
+        left: 40%;
+        width: 400px;
+        height: 230px;
+        border-radius: 5px;
+        background-color: #f6f6f6;
+        -moz-box-shadow: 10px 10px 10px #888888; /* 老的 Firefox */
+        box-shadow: 10px 10px 10px #888888;
     }
-
-    .overlay p {
+    p {
         border-bottom: 1px solid #ccc;
         padding-bottom: 15px;
     }
-    
-    .overlay .name-label {
+    .name-label {
         display: block;
         margin-top: 20px;
     }
-    .overlay .name-input {
+    .name-input {
         display: block;
         margin: 20px auto;
         width: 100%;
         height: 30px;
     }
-    .overlay .sub-input {
+    .sub-input {
         display: block;
         margin: 20px auto;
         width: 100%;
         height: 30px;
-        background-color: #7AC240;
+        background-color: @high-light;
         border: none;
-        color: #fff;
         -webkit-transition: all 0.4s ease-in-out;
         -moz-transition: all 0.4s ease-in-out;
         -o-transition: all 0.4s ease-in-out;
         transition: all 0.4s ease-in-out; 
         cursor: pointer;
+        &:hover {
+            background-color: @light-green;
+        }
     }
 
-        .overlay .sub-input:hover {
-            background-color: #297F36;
-        }
-
-    .overlay .cancle {
+    .cancle {
         position: absolute;
         left: 386px;
         top: -15px;
         color: #222;
         cursor: pointer;
     }
+}
 
+.overlay-content {
+    padding: 20px;
+    margin: 0 auto;
+}
 header {
     height: 320px;
     background: url(../img/banner.png);
-    min-width: 920px;
+    min-width: 980px;
     position: absolute;
     width: 100%;
     h1 {
@@ -132,6 +141,9 @@ header {
     position: relative;
     height: 100%;
     padding-top: 330px;
+    i {
+        padding: 0 12px 0 12px;
+    }
 
 }
 
@@ -139,14 +151,6 @@ aside {
     .section-width;
     float: left;
     position: relative;
-    min-height: 100%;
-    #add-category {
-        cursor: pointer;
-        padding-right: 10px;
-    }
-    .fa {
-        padding: 0 12px 0 12px;
-    }
 }
 
     .add-category {
@@ -199,7 +203,7 @@ aside {
         li {
             padding: 5px 10px;
             &:hover {
-                background-color: #FAFAEE;
+                background-color: @light-green;
             }
         }
     }
@@ -212,7 +216,6 @@ aside {
 
     p.delete-category-btn {
         list-style: none;
-        background: url(../img/x.png) no-repeat;
         position: absolute;
         height: 25px;
         width: 25px;
@@ -222,8 +225,8 @@ aside {
         display: none;
         margin-top: 5px;
     }
-
     .category-name:hover p.delete-category-btn{
+        background: url('../img/x.png') no-repeat;
         display: block;
     }
 
@@ -231,8 +234,6 @@ section {
     .section-width;
     float: left;
     position: relative;
-    min-height: 100%;
-    overflow: hidden;
 }
     .task-wrapper {
         padding-bottom: 70px;
@@ -257,12 +258,11 @@ section {
         .codes {
             padding: 5px 10px;
             cursor: pointer;
-        }
-
-            .codes.active {
+            &.active {
                 background-color: #fff;
                 border-radius: 5px;
             }
+        }
 
     .one-day-task p{
         list-style: none;
@@ -280,7 +280,7 @@ section {
             cursor: pointer;
             list-style: none;
             &:hover, &.active-task{
-                background-color: #d5f6bb;
+                background-color: @light-green;
             }
         }
 
@@ -295,15 +295,19 @@ section {
     }
 article {
     width: 54%;
-    margin: 0 1% 0 45%;
+    margin: 0 1% 0 1%;
+    float: left;
     min-width: 460px;
     position: relative;
     min-height: 100%;
+}
+
+.task-detail {
     
 }
     #sure, #cancle {
         display: none;
-    }   
+    }
 
     .task-btn {
         cursor: pointer;
@@ -319,6 +323,7 @@ article {
     }
         #task-header-line {
             overflow: hidden;
+            width: 100%;
         }
         #task-name {
             width: 100%;
@@ -334,33 +339,28 @@ article {
             border-radius: 5px;
         }
 
-        #task-header-line img{
-            float: left;
-            padding: 10px;
-            cursor: pointer;
-        }
-
         #date-line {
-            background-color: #fff;
-            height: 50px;
             line-height: 50px;
             overflow: hidden;
-            margin: 0px 0 10px 0;
-            border-radius: 5px;
+            width: 100%;
             label {
                 width: 100px;
                 padding-left: 10px;
                 float: left;
                 margin-right: -100%;
+                background-color: #fff;
+                border-radius: 5px 0 0 5px;
             }
         }
             #datepicker {
-                background-color: transparent;
+                width: 100%;
+                background-color: #fff;
+                border-radius: 5px;
                 height: 50px;
                 border: none;
-                width: 100%;
                 float: left;
-                padding-left: 130px;
+                margin-left: 100px;
+                margin-bottom: 10px;
             }
 
             .task-content{
@@ -382,4 +382,5 @@ article {
                 outline: none;
                 padding: 10px;
                 box-sizing: border-box;
+                float: left;
             }
