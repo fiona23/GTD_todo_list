@@ -58,8 +58,10 @@ Util.prototype = {
         newArr.splice(0, k);
         newArr.splice(1, newArr.length);
         return newArr;
-    }
+    },
+
 }
+
 
 util.trim = function (str) {
     if (this.istype(str) !== 'String'){return false;}
@@ -312,7 +314,7 @@ function getCookie(cookieName) {
 }
 
 // 
-function ajax(url, options) {
+util.ajax = function (url, options) {
     // your implement
     if (!options.type) {
         options.type = "post"
@@ -341,7 +343,60 @@ function ajax(url, options) {
     }
 }
 
+var Device = function () {
+    
+}
 
+util.translate = function (ele, posx, posy, posz) {
+    ele.style.webkitTransform = 'translate3d('+ posx +', '+posy +','+ posz +')';
+    ele.style.MozTransform = 'translate3d('+ posx +', '+posy +','+ posz +')';
+    ele.style.transform = 'translate3d('+ posx +', '+posy +','+ posz +')';
+}
+
+util.transition = function (ele, event, time) {
+    ele.style.webkitTransition = event + ' ' + time + ' ease-in-out'
+    ele.style.MozTransition = event + ' ' + time + ' ease-in-out'
+    ele.style.transition = event + ' ' + time + ' ease-in-out'
+}
+
+Device.prototype = {
+    init: function () {
+        this.innerWidth = window.innerWidth;
+        if (this.innerWidth <= 768 ) {
+            return true;
+        }
+        return false;
+    },
+    slideRight: function (now, next) {
+        if (next) {
+            util.translate(next, 0, 0, 0)
+            util.translate(now, '-100%', 0, 0)
+        }
+        else {
+            this.noSlide(now, null, next)
+        }
+    },
+    slideLeft: function (now, pre) {
+        if (pre) {
+            util.translate(pre, 0, 0, 0);
+            util.translate(now, '100%', 0, 0);
+        } else {
+            this.noSlide(now, null, pre)
+        }
+            
+    },
+    noSlide: function (now, pre, next) {
+        util.translate(now, 0, 0, 0)
+        if (pre) {
+            util.translate(pre, '-100%', 0, 0)
+        }
+        if (next) {
+            util.translate(next, '100%', 0, 0)
+        };
+    }
+}
+
+util.device = new Device()
 
 function $(selector, context) {
     var idReg = /^#([\w_\-]+)/;

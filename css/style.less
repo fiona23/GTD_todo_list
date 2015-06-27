@@ -9,7 +9,6 @@ article,aside,dialog,footer,header,section,footer,nav,figure,menu{display:block}
 body,html{
     height: 100%;
     background-color: #f1f1f1;
-    min-width: 980px;
 }
 
 
@@ -53,6 +52,22 @@ body,html{
     &:hover {
         background-color: #eee;
     }
+}
+
+.transform-translate3d(@x: 0, @y: 0, @z: 0){
+    -webkit-transform: translate3d(@x, @y, @z);
+       -moz-transform: translate3d(@x, @y, @z);
+        -ms-transform: translate3d(@x, @y, @z);
+         -o-transform: translate3d(@x, @y, @z);
+            transform: translate3d(@x, @y, @z);
+}
+
+.transition(@item: all, @time: 0.6s){
+    -webkit-transition: @item @time;
+       -moz-transition: @item @time;
+        -ms-transition: @item @time;
+         -o-transition: @item @time;
+            transition: @item @time;
 }
 
 li {
@@ -124,7 +139,6 @@ li {
 header {
     height: 320px;
     background: url(../img/banner.png);
-    min-width: 980px;
     position: absolute;
     width: 100%;
     h1 {
@@ -384,3 +398,36 @@ article {
                 box-sizing: border-box;
                 float: left;
             }
+/*适配移动端*/
+@media screen and (max-width: 768px) {
+    header {
+        height: 50px;
+        h1 {
+            font-size: 14px;
+            line-height: 50px;
+            padding: 0px;
+        }
+    }
+
+    #content {
+        padding-top: 50px;
+        position: relative;
+        overflow: hidden;
+        aside, section, article {
+            width: 100%;
+            display: inline-block;
+            position: absolute;
+            margin: 0;
+            overflow: hidden;
+        }
+
+        aside {
+            
+        }
+        section, article {
+            .transform-translate3d(100%, 0, 0)
+        }
+    }
+
+
+}

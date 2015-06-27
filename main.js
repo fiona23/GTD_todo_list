@@ -43,6 +43,7 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
 
         //add task
         $.on('#'+defaults.addTask, 'click', function (e) {
+            $.on('#'+defaults.addTask, 'click')
             operateTask.addTask(e)
         })
         //cancle edit/add task
@@ -55,9 +56,11 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
             operateTask.taskComplete();
             }
         })
+        //选择【所有】 【未完成】 【已完成】
         $.on('#'+defaults.pendingBtn, 'click', operateTask.chooseCode)
         $.on('#'+defaults.completedBtn, 'click', operateTask.chooseCode)
         $.on('#'+defaults.allBtn, 'click', operateTask.chooseCode);
+        //取消添加category
         $.on($('.cancle', $('#'+defaults.addCateL2Overlay)[0])[0], 'click', function () {
              $('#'+defaults.addCateL2Overlay)[0].style.display = 'none'
         })
@@ -65,6 +68,40 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
             $('#'+defaults.cateOverlay)[0].style.display = 'none'
         })
         $.delegate('#'+defaults.cateL1Li, 'p', 'click', operateCategory.deleteCategory);
+        //移动端滑动
+        function bindSlide (now, pre, next) {
+            var touchPos = {};
+                $.on(now, 'touchstart', function (e) {
+                    var touches = e.changedTouches[0];
+                    touchPos.x = touches.clientX;
+                })
+                $.on(now, 'touchmove', function (e) {
+                    init.slide(e, now, pre, next, touchPos)
+                })
+
+                $.on(now, 'touchend', function (e) {
+                    touchPos.endx = e.changedTouches[0].clientX;
+                    var moveDis = touchPos.endx - touchPos.x;
+                    if (moveDis < -60) {
+                        $.device.slideRight(now, next);
+                    } else if (moveDis > 60){
+                        $.device.slideLeft(now, pre);
+                    } else if (0<moveDis<60 || -60<moveDis<0) {
+                        $.device.noSlide(now, pre, next)
+                    }
+                    $.transition($('.list')[0], 'transform', '0.6s')
+                    $.transition($('.category')[0], 'transform', '0.6s')
+                    $.transition($('.detail')[0], 'transform', '0.6s')
+                    alert(now.style.webkitTransition)
+                })
+        }
+
+        if ($.device.init()) {
+            bindSlide($('.list')[0], $('.category')[0], $('.detail')[0])
+            bindSlide($('.category')[0], null, $('.list')[0])
+            bindSlide($('.detail')[0], $('.list')[0], null)
+        }
+        
 
     }
     allbind();

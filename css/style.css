@@ -21,7 +21,6 @@ body,
 html {
   height: 100%;
   background-color: #f1f1f1;
-  min-width: 980px;
 }
 .section-width {
   width: 21%;
@@ -127,7 +126,6 @@ li {
 header {
   height: 320px;
   background: url(../img/banner.png);
-  min-width: 980px;
   position: absolute;
   width: 100%;
 }
@@ -411,4 +409,42 @@ article {
   padding: 10px;
   box-sizing: border-box;
   float: left;
+}
+/*适配移动端*/
+@media screen and (max-width: 768px) {
+  header {
+    height: 50px;
+  }
+  header h1 {
+    font-size: 14px;
+    line-height: 50px;
+    padding: 0px;
+  }
+  #content {
+    padding-top: 50px;
+    position: relative;
+    overflow: hidden;
+  }
+  #content aside,
+  #content section,
+  #content article {
+    width: 100%;
+    display: inline-block;
+    position: absolute;
+    margin: 0;
+    overflow: hidden;
+    -webkit-transition: transform 0.6s;
+    -moz-transition: transform 0.6s;
+    -ms-transition: transform 0.6s;
+    -o-transition: transform 0.6s;
+    transition: transform 0.6s;
+  }
+  #content section,
+  #content article {
+    -webkit-transform: translate3d(100%, 0, 0);
+    -moz-transform: translate3d(100%, 0, 0);
+    -ms-transform: translate3d(100%, 0, 0);
+    -o-transform: translate3d(100%, 0, 0);
+    transform: translate3d(100%, 0, 0);
+  }
 }
