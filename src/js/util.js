@@ -1,24 +1,27 @@
-var util = function (selector) {
-    return new Util(selector)
+var util = function (selector, context) {
+    return new Util(selector, context)
 }
 
-var Util = function (selector) {
+var Util = function (selector, context) {
+    //如果是字符串，则返回选择器结果
     if (typeof selector === 'string') {
-        for (i in $(selector)){
-            return this.push($(selector)[i]);
+        for (i in $(selector, context)){
+            this.push($(selector, context)[i]);
         }
+        return this;
+    //如果是DOM
     } else if (selector.nodeType){
         return this.push(selector);
     }
 }
 
-Util.prototype = {
+Util.fn = Util.prototype = {
     length: 0,
     push: [].push,
     sort: [].sort,
     splice: [].splice,
     hasClass: function (className) {
-        var classNames = this.className;
+        var classNames = this[0].className;
         if(!classNames) {
             return false;
         }
@@ -35,7 +38,7 @@ Util.prototype = {
 
         if (!this.hasClass(newClassName)) {
             this[0].className += " "+ newClassName
-            this[0].className = this.trim(element.className);
+            this[0].className = util.trim(this[0].className);
         };
         return this;
     },
@@ -43,44 +46,112 @@ Util.prototype = {
     // 移除dom中的样式oldClassName
     removeClass: function (oldClassName) {
          if (this.hasClass(oldClassName)) {
-            this[0].className = element.className.replace(oldClassName,"");
-            this[0].className = this.trim(element.className);
+            this[0].className = this[0].className.replace(oldClassName,"");
+            this[0].className = util.trim(this[0].className);
          };
          return this;
+    },
+    append: function (ele) {
+        this[0].appendChild(ele)
+    },
+    eq: function (k) {
+        var newArr = util.cloneObject(this);
+        newArr.length = this.length;
+        newArr.splice(0, k);
+        newArr.splice(1, newArr.length);
+        return newArr;
+    },
+
+}
+
+//添加属性
+util.extend = function (obj) {
+    var extended = obj.extended;
+    for (var i in obj) {
+        util[i] = obj[i]
+    }
+    if (extended) {
+        extended(Util)
     }
 }
 
-util.trim = function (str) {
-    if (istype(str) !== 'String'){return false;}
-    var whitespace = "\t\n\r "
-    var newstr = "";
-    //去除头的空格
-    for (var i=0; i<str.length;i++){
-        //判断第一个不是空格的字符
-        if (whitespace.indexOf(str.charAt(i)) == -1){
-            newstr = str.slice(i);
-            break;
+//添加属性给实例
+util.include = function (obj) {
+    var included = obj.included;
+    for (var i in obj) {
+        Util.fn[i] = obj [i];
+    }
+    if (included) {
+        included(Util)
+    };
+
+    return Util;
+}
+
+
+util.extend({
+    trim: function (str) {
+        if (this.istype(str) !== 'String'){return false;}
+        var whitespace = "\t\n\r "
+        var newstr = "";
+        //去除头的空格
+        for (var i=0; i<str.length;i++){
+            //判断第一个不是空格的字符
+            if (whitespace.indexOf(str.charAt(i)) == -1){
+                newstr = str.slice(i);
+                break;
+            }
+        }
+        //去除尾的空格
+        for (var j=newstr.length; j>0;j--){
+            //判断最后一个不是空格的字符
+            if(whitespace.indexOf(newstr.charAt(j)) == -1){
+                newstr = newstr.slice(0,j+1);
+                break;
+            }
+        }
+        return newstr;
+    },
+    isFunction: function (fn) {
+        if(typeof fn == 'function'){
+            return true;
+        } else {
+            return false;
+        }
+    },
+    // 给一个dom绑定一个针对event事件的响应，响应函数为listener
+    on: function(selector, event, listener){
+        //如果输入的是选择器，就转为dom
+        if (typeof selector === 'string') {
+            selector = $(selector)[0]
+        }
+        if (selector.addEventListener) {
+            selector.addEventListener(event, listener, false);
+        } else if(selector.attachEvent) {
+            selector.attachEvent("on" + event, listener);
+        } else {
+            selector["on" + event] = listener;
+        }
+    },
+    // 移除dom对象对于event事件发生时执行listener的响应，当listener为空时，移除所有响应函数
+    un: function(selector, event, listener){
+        if (typeof selector === 'string') {
+            selector = $(selector)[0]
+        }
+        if(listener){
+            if (selector.removeEventListener) {
+                selector.removeEventListener(event, listener, false);
+            } else {
+                selector.DetachEvent(event, listener);
+            }
+        } else {
+            //通过复制节点移除所有响应函数
+            var newElement = selector.cloneNode(true)
+            selector.parentNode.replaceChild(newElement, selector);
         }
     }
-    //去除尾的空格
-    for (var j=newstr.length; j>0;j--){
-        //判断最后一个不是空格的字符
-        if(whitespace.indexOf(newstr.charAt(j)) == -1){
-            newstr = newstr.slice(0,j+1);
-            break;
-        }
-    }
-    return newstr;
-}
+})
 
-
-util.isFunction = function (fn) {
-    if(typeof fn == 'function'){
-        return true;
-    } else {
-        return false;
-    }
-}
 
 util.isArray = function (arr) {
     var result = arr instanceof Array;
@@ -103,17 +174,15 @@ util.istype = function(ele) {
 
 //深度克隆
 util.cloneObject = function (src) {
-    var srcType = istype(src);
+    var srcType = this.istype(src);
     var result,k;
     //判断需要克隆的对象是否是Object类型或者Array类型
     if(srcType === "Object" || srcType === "Array"){
         result = srcType === "Object"? {}:[];
         for(k in src){
-            result[k] = cloneObject(src[k])
+            result[k] = this.cloneObject(src[k])
         }
         return result;
-    } else if (srcType === "Function" || "RegExp"){//如果是函数或者正则表达式则不复制
-        return false;
     } else {     //普通类型直接浅复制
         result = src;
         return result;
@@ -195,20 +264,7 @@ function getPosition(element) {
 }
 
 
-// 给一个dom绑定一个针对event事件的响应，响应函数为listener
-util.on = function(selector, event, listener){
-    //如果输入的是选择器，就转为dom
-    if (typeof selector === 'string') {
-        selector = $(selector)
-    }
-    if (selector.addEventListener) {
-        selector.addEventListener(event, listener, false);
-    } else if(selector.attachEvent) {
-        selector.attachEvent("on" + event, listener);
-    } else {
-        selector["on" + event] = listener;
-    }
-}
+
 
 
 // 例如：
@@ -216,32 +272,16 @@ util.on = function(selector, event, listener){
     
 //}
 
-// 移除dom对象对于event事件发生时执行listener的响应，当listener为空时，移除所有响应函数
-util.un = function(selector, event, listener){
-    if (typeof selector === 'string') {
-        selector = $(selector)
-    }
-    if(listener){
-        if (selector.removeEventListener) {
-            selector.removeEventListener(event, listener, false);
-        } else {
-            selector.DetachEvent(event, listener);
-        }
-    } else {
-        //通过复制节点移除所有响应函数
-        var newElement = selector.cloneNode(true)
-        selector.parentNode.replaceChild(newElement, selector);
-    }
-}
+
 
 // 实现对click事件的绑定
 util.click = function(selector, listener){
-    $.on(selector,"click", listener)
+    util.on(selector,"click", listener)
 }
 
 // 实现对于按Enter键时的事件绑定
 util.enter = function(selector, listener){
-    $.on(selector,"onkeydown", function () {
+    util.on(selector,"onkeydown", function () {
         if(keyCode == 13){
             listener()
         } else {
@@ -254,7 +294,7 @@ util.enter = function(selector, listener){
 
 // 先简单一些
 function delegateEvent(selector, tag, eventName, listener) {
-    $.on(selector, eventName, function (event) {
+    util.on(selector, eventName, function (event) {
         var e = event || window.event;
         target = e.srcElement? e.srcElement : e.target;
         if(target.tagName.toLowerCase() === tag){
@@ -303,7 +343,7 @@ function getCookie(cookieName) {
 }
 
 // 
-function ajax(url, options) {
+util.ajax = function (url, options) {
     // your implement
     if (!options.type) {
         options.type = "post"
@@ -334,7 +374,63 @@ function ajax(url, options) {
 
 
 
-function $(selector) {
+util.extend({
+    translate: function (ele, posx, posy, posz) {
+        ele.style.webkitTransform = 'translate3d('+ posx +', '+posy +','+ posz +')';
+        ele.style.MozTransform = 'translate3d('+ posx +', '+posy +','+ posz +')';
+        ele.style.transform = 'translate3d('+ posx +', '+posy +','+ posz +')';
+    },
+    transition: function (ele, event, time) {
+        ele.style.webkitTransition = event + ' ' + time + ' ease-in-out'
+        ele.style.MozTransition = event + ' ' + time + ' ease-in-out'
+        ele.style.transition = event + ' ' + time + ' ease-in-out'
+    }
+})
+
+var Device = function () {
+    
+}
+
+Device.prototype = {
+    init: function () {
+        this.innerWidth = window.innerWidth;
+        if (this.innerWidth <= 768 ) {
+            return true;
+        }
+        return false;
+    },
+    slideRight: function (now, next) {
+        if (next) {
+            util.translate(next, 0, 0, 0)
+            util.translate(now, '-100%', 0, 0)
+        }
+        else {
+            this.noSlide(now, null, next)
+        }
+    },
+    slideLeft: function (now, pre) {
+        if (pre) {
+            util.translate(pre, 0, 0, 0);
+            util.translate(now, '100%', 0, 0);
+        } else {
+            this.noSlide(now, null, pre)
+        }
+            
+    },
+    noSlide: function (now, pre, next) {
+        util.translate(now, 0, 0, 0)
+        if (pre) {
+            util.translate(pre, '-100%', 0, 0)
+        }
+        if (next) {
+            util.translate(next, '100%', 0, 0)
+        };
+    }
+}
+
+util.device = new Device()
+
+function $(selector, context) {
     var idReg = /^#([\w_\-]+)/;
     var classReg = /^\.([\w_\-]+)/;
     var tagReg = /^\w+$/i;
@@ -346,7 +442,7 @@ function $(selector) {
 
     // 不考虑'>' 、`~`等嵌套关系
     // 父子选择器之间用空格相隔
-    var context = document;
+    var context = context || document;
 
     function blank() {}
     function hasClass(element, className) {
@@ -414,6 +510,7 @@ function $(selector) {
                 }
                 else {
                     var temp = context.getElementsByTagName('*');
+                    //console.log(temp)
                     for (var i = 0, len = temp.length; i < len; i++) {
                         var node = temp[i];
                         if (hasClass(node, className)) {
@@ -499,7 +596,6 @@ function $(selector) {
     }
 
     var result = find(selector.split(/\s+/), context);
-
     return result;
 }
 

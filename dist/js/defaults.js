@@ -1,0 +1,4 @@
+/*!GTD Tool 2015-06-27
+* created by fiona23
+*/
+define([],function(){return{cateL1Li:"category-level1-list",cateL2Li:"category-level2-list",cateL1:"category-level1",cateL2:"category-level2",addCategory:"add-category",addCateSub:"add-category-submit",addCateName:"add-category-name",cateOverlay:"add-category-overlay",addTask:"add-task",taskName:"task-name",datepicker:"datepicker",taskDescription:"task-description",sureCancle:"sure-cancle",sure:"sure",cancle:"cancle",oneDayTask:"one-day-task",editTask:"edit",taskComplete:"complete",pending:"pending",completed:"completed",rightBtn:"right-mouse-btn",addCateL2:"add-category-level2",delCateL2:"delet-category-level2",addCateL2Overlay:"add-category-level2-overlay",addCateL2Name:"add-category-level2-name",addCateL2Sub:"add-category-level2-submit",pendingBtn:"pending-btn",completedBtn:"completed-btn",allBtn:"all-btn",allTaskNum:"all-task-num",delCateBtn:"delete-category-btn"}});

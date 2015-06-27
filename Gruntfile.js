@@ -12,18 +12,64 @@ module.exports = function (grunt) {
         },
         uglify: {
             options: {
-                banner: ''
+                banner: '/*!<%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %>\n* created by <%= pkg.author %>\n*/\n'
             },
-            dist: {
-                file: {
-                    
+            my_target: {
+                files: {
+                    'dist/js/categoryData.js': ['src/js/categoryData.js'],
+                    'dist/js/defaults.js': ['src/js/defaults.js'],
+                    'dist/js/init.js': ['src/js/init.js'],
+                    'dist/js/operateCategory.js': ['src/js/operateCategory.js'],
+                    'dist/js/operateTask.js': ['src/js/operateTask.js'],
+                    'dist/js/todoData.js': ['src/js/todoData.js'],
+                    'dist/js/util.js': ['src/js/util.js']
                 }
             }
-            bulid: {
-
+        },
+        requirejs: {
+            compile: {
+                options: {
+                    baseUrl: "js/",
+                    mainConfigFile: "main.js",
+                    done: function(done, output) {
+                    var duplicates = require('rjs-build-analysis').duplicates(output);
+                    if (duplicates.length > 0) {
+                        grunt.log.subhead('Duplicates found in requirejs build:');
+                        grunt.log.warn(duplicates);
+                        done(new Error('r.js built duplicate modules, please check the excludes option.'));
+                    }
+                    done();
+                    }
+                }
             }
+        },
+        less: {
+            development: {
+                options: {
+                  paths: ["/css/"]
+                },
+                files: {
+                  "css/style.css": "css/style.less"
+                }
+            }
+        },
+        cssmin: {
+          options: {
+            shorthandCompacting: false,
+            roundingPrecision: -1
+          },
+          target: {
+            files: {
+              'dist/css/style.css': ['src/css/style.css']
+            }
+          }
         }
     });
 
-    grunt.loadNpmTasks
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-requirejs');
+    grunt.loadNpmTasks('grunt-contrib-less');
+    grunt.loadNpmTasks('grunt-contrib-cssmin');
+    // 默认执行的任务
+    grunt.registerTask('default', ['uglify']);
 }
