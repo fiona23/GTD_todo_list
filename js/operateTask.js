@@ -66,7 +66,7 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
             addTask: function (e) {
                 changeBtn('edit');
                 changeInputState(e);
-                $.on('#'+defaults.sure, 'click', function () {
+                $.on('#'+defaults.sure, 'click', function (ele) {
                     console.log('a')
                     var title = $('#' + defaults.taskName)[0].value;
                     var date = $('#' + defaults.datepicker)[0].value;
@@ -104,7 +104,7 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                         return false
                     }
                     changeBtn('save');
-                    changeInputState(e);
+                    changeInputState(ele);
                     $.un('#'+defaults.sure, 'click')
                 })
                 

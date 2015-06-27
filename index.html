@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>todo list</title>
     <link rel="stylesheet" href="css/style.css" type="text/css">
      <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    
     <!--[if lt IE9]> 
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
@@ -14,7 +16,7 @@
      <h1>GTD Tools</h1>
  </header>
 <div id="content">
- <aside oncontextmenu="return false;">
+ <aside oncontextmenu="return false;" class="category">
     <p>所有任务(<span id="all-task-num"></span>)</p>
     <p>分类列表</p>
     <ul id="category-level1-list">
@@ -25,7 +27,7 @@
     </ul>
     <p id="add-category" class="add-category"><i class="fa fa-plus fa-lg"></i>新加分类</p>
  </aside>
- <section>
+ <section class="list">
      <p id="codes-line"><span id="all-btn" class="codes active">所有</span>
         <span id="pending-btn" class="codes">未完成</span>
         <span id="completed-btn" class="codes">已完成</span>
@@ -38,7 +40,7 @@
      
      <p id="add-task" class="add-task"><i class="fa fa-plus fa-lg"></i>新加任务</p>
  </section>
- <article>
+ <article class="detail">
 
     <div id="task-header-line">
         <input id="task-name" type="text" disabled="disabled" placeholder="请输入任务名称">

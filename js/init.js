@@ -1,6 +1,5 @@
 define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, categoryData, data) {
         var storage = window.localStorage;
-        console.log($)
         var codes = {
             "1" : "#pending",
             "2" : "#completed",
@@ -34,7 +33,7 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                         var newCateL2 = document.createElement('li');
                         newCateL2.className = categoryData[params]['child'][childParams]['id'] + ' '
                         + defaults.cateL2 + ' ' + categoryData[params]['id'];
-                        newCateL2.innerHTML = '<i class="fa fa-file-o"></i>'+categoryData[params]['child'][childParams]['name'] ;
+                        newCateL2.innerHTML = '<i class="fa fa-file-o"></i>'+categoryData[params]['child'][childParams]['name'];
                         ol.appendChild(newCateL2);
                         console.log(newCateL2)
                     }
@@ -66,6 +65,9 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                         init.showTaskList();
                         //显示该分类下第一个任务
                         init.showTaskDetail();
+                        if ($.device.init()) {
+                            $.device.slideRight($('aside')[0], $('section')[0]);
+                        }
 
                     })
                 }
@@ -200,6 +202,29 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                 $('#'+defaults.datepicker)[0].value = data[id]['date'];
                 $('#'+defaults.taskDescription)[0].value = data[id]['description'];
                 $('#'+defaults.taskName)[0].className = id;
+                if ($.device.init()) {
+                    $.device.slideRight($('section')[0], $('article')[0]);
+                }
+            }
+        },
+
+        slide: function (e, now, pre, next, touchPos) {
+            var innerwWidth = window.innerWidth
+            var touch = e.changedTouches[0];
+            var moveDis = touch.clientX - touchPos.x
+            //跟随手指移动
+            $.translate(now, moveDis+'px', 0, 0);
+            $.transition(now, 'transform', '0s')
+            if (moveDis > 0) {
+                if (pre) {
+                    $.transition(pre, 'transform', '0s')
+                    $.translate(pre, parseInt(-innerWidth + moveDis) +'px', 0, 0)
+                }
+            } else if (moveDis < 0) {
+                if (next) {
+                    $.transition(next, 'transform', '0s')
+                    next.style.webkitTransition = "-webkit-transform 0s ease-out";
+                };
             }
         }
     }//init  ends
