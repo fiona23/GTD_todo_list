@@ -19,12 +19,12 @@ body,html{
 .section-width {
     width: 21%;
     margin: 0 0 0 1%;
-    min-width: 200px;
+    min-width: 225px;
     background-color: #fff;
     border-radius: 5px;
     height: 100%;
     overflow-y: scroll;
-    padding-bottom: 40px;
+    padding-bottom: 80px;
     box-sizing: border-box;
     &::-webkit-scrollbar-thumb {
         background:transparent;
@@ -42,7 +42,7 @@ body,html{
     height: 40px;
     line-height: 40px;
     width: inherit;
-    min-width: 205px;
+    min-width: 225px;
     background-color: #ddd;
     cursor: pointer;
     overflow-y: scroll;
@@ -309,12 +309,11 @@ section {
         display: none;
     }
 article {
-    width: 54%;
     margin: 0 1% 0 1%;
-    float: left;
     position: relative;
+    overflow: hidden;
     min-height: 100%;
-    background-color: #f1f1f1;;
+    background-color: #f1f1f1;
 }
 
 .task-detail {
@@ -400,7 +399,7 @@ article {
                 float: left;
             }
 /*适配移动端*/
-@media screen and (max-width: 768px) {
+@media  (max-width: 768px) {
     header {
         height: 50px;
         h1 {
@@ -422,9 +421,6 @@ article {
             overflow: hidden;
         }
 
-        aside {
-            
-        }
         section, article {
             .transform-translate3d(100%, 0, 0)
         }
