@@ -89,10 +89,9 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
                     } else if (0<moveDis<60 || -60<moveDis<0) {
                         $.device.noSlide(now, pre, next)
                     }
-                    $.transition($('.list')[0], 'transform', '0.6s')
-                    $.transition($('.category')[0], 'transform', '0.6s')
-                    $.transition($('.detail')[0], 'transform', '0.6s')
-                    alert(now.style.webkitTransition)
+                    $.transition($('.list')[0], '-webkit-transform', '0.6s')
+                    $.transition($('.category')[0], '-webkit-transform', '0.6s')
+                    $.transition($('.detail')[0], '-webkit-transform', '0.6s')
                 })
         }
 

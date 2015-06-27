@@ -330,9 +330,9 @@ article {
   width: 54%;
   margin: 0 1% 0 1%;
   float: left;
-  min-width: 460px;
   position: relative;
   min-height: 100%;
+  background-color: #f1f1f1;
 }
 #sure,
 #cancle {
@@ -433,11 +433,6 @@ article {
     position: absolute;
     margin: 0;
     overflow: hidden;
-    -webkit-transition: transform 0.6s;
-    -moz-transition: transform 0.6s;
-    -ms-transition: transform 0.6s;
-    -o-transition: transform 0.6s;
-    transition: transform 0.6s;
   }
   #content section,
   #content article {
@@ -446,5 +441,14 @@ article {
     -ms-transform: translate3d(100%, 0, 0);
     -o-transform: translate3d(100%, 0, 0);
     transform: translate3d(100%, 0, 0);
+  }
+}
+@media (max-width: 460px) {
+  #task-name {
+    margin: 0 -70px 10px 0;
+  }
+  #task-header-line i {
+    padding: 0 5px;
+    z-index: 9999;
   }
 }

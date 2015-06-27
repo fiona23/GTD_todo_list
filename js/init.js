@@ -214,16 +214,16 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
             var moveDis = touch.clientX - touchPos.x
             //跟随手指移动
             $.translate(now, moveDis+'px', 0, 0);
-            $.transition(now, 'transform', '0s')
+            $.transition(now, '-webkit-transform', '0s')
             if (moveDis > 0) {
                 if (pre) {
-                    $.transition(pre, 'transform', '0s')
+                    $.transition(pre, '-webkit-transform', '0s')
                     $.translate(pre, parseInt(-innerWidth + moveDis) +'px', 0, 0)
                 }
             } else if (moveDis < 0) {
                 if (next) {
-                    $.transition(next, 'transform', '0s')
-                    next.style.webkitTransition = "-webkit-transform 0s ease-out";
+                    $.transition(next, '-webkit-transform', '0s')
+                    $.translate(next, parseInt(innerWidth + moveDis) +'px', 0, 0)
                 };
             }
         }

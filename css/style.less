@@ -311,9 +311,9 @@ article {
     width: 54%;
     margin: 0 1% 0 1%;
     float: left;
-    min-width: 460px;
     position: relative;
     min-height: 100%;
+    background-color: #f1f1f1;;
 }
 
 .task-detail {
@@ -427,7 +427,20 @@ article {
         section, article {
             .transform-translate3d(100%, 0, 0)
         }
+        
     }
 
+}
 
+@media (max-width: 460px) {
+    #task-name {
+        margin: 0 -70px 10px 0;
+    }
+
+    #task-header-line {
+        i {
+            padding: 0 5px;
+            z-index: 9999;
+        }
+    }
 }
