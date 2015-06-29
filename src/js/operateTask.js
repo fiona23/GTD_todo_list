@@ -35,15 +35,25 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                 if (target.id === defaults.addTask) {
                     //reset value
                     ele[0].value = '';
-                    ele[0].removeAttribute('disabled')
+                    ele[0].removeAttribute('disabled');
+                    ele[0].style.display = 'block';
+                    $('#task-name-show')[0].style.display = 'none'
+                    $('#date-show')[0].style.display = 'none'
+                    $('#description-show')[0].style.display = 'none'
                 }
                 //if click edit task
                 else if (target.id === defaults.editTask){
-                    ele[0].removeAttribute('disabled')
-                } else if (target.id === 'cancle') {
-                    ele[0].setAttribute('disabled', 'disabled')
-                } else if (target.id === 'sure') {
-                    ele[0].setAttribute('disabled', 'disabled')
+                    ele[0].removeAttribute('disabled');
+                    ele[0].style.display = 'block';
+                    $('#task-name-show')[0].style.display = 'none'
+                    $('#date-show')[0].style.display = 'none'
+                    $('#description-show')[0].style.display = 'none'
+                } else if (target.id === 'cancle' || 'sure') {
+                    ele[0].setAttribute('disabled', 'disabled');
+                    ele[0].style.display = 'none';
+                    $('#task-name-show')[0].style.display = 'block'
+                    $('#date-show')[0].style.display = 'block'
+                    $('#description-show')[0].style.display = 'block'
                 }
             }
         }
@@ -111,10 +121,14 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
             },
             editTask: function (e) {
                 changeInputState(e);
-                changeBtn('edit')
-                $.on('#'+defaults.sure, 'click', function () {
+                changeBtn('edit');
+                var id = $('#' + defaults.taskName)[0].getAttribute('data-id');
+                $('#' + defaults.taskName)[0].value = data[id]['title'];
+                $('#' + defaults.datepicker)[0].value = data[id]['date'];
+                $('#' + defaults.taskDescription)[0].value = data[id]['description'];
+                $.on('#'+defaults.sure, 'click', function (ele) {
                     //update local storage
-                    var id = $('#' + defaults.taskName)[0].className
+                    
                     var title = $('#' + defaults.taskName)[0].value;
                     var date = $('#' + defaults.datepicker)[0].value;
                     var description = $('#' + defaults.taskDescription)[0].value;
@@ -122,11 +136,12 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                     data[id]['date'] = date;
                     data[id]['description'] = description;
                     storage.setItem("todoData", JSON.stringify(data));
+                    changeInputState(ele);
                     init.showTaskList();
                     init.showTaskDetail();
-                    changeBtn('save')
+                    changeBtn('save');
+                    $.un('#'+defaults.sure, 'click')
                 })
-                $.un('#'+defaults.sure, 'click')
             },
             taskComplete: function () {
                 var id = $('#' + defaults.taskName)[0].className

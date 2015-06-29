@@ -12,13 +12,20 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
             for (var params in categoryData) {
                 var cateLi = document.createElement('li');
                 if (categoryData[params]['name'] === '默认分类') {
-                    cateLi.innerHTML = '<div class="category-name"><i class="fa fa-folder-open"></i>'+categoryData[params]['name']
-                    + '(<span class="taskNumDivi"></span>)</div>' ;
+                    cateLi.innerHTML = '<div class="category-name">'
+                    + '<i class="fa fa-folder-open"></i>'+categoryData[params]['name']
+                    + '(<span class="taskNumDivi"></span>)'
+                    + '<i data-category= "' + categoryData[params]['id'] + '" class="fa fa-plus"></i></div>';
                 }
                 else {
-                    cateLi.innerHTML = '<div class="category-name"><i class="fa fa-folder-open"></i>'+categoryData[params]['name']
-                    + '(<span class="taskNumDivi"></span>)<p class="'
-                    +defaults.delCateBtn+'"></p></div>';
+                    //<div>category名称 + x</div>
+                    cateLi.innerHTML = '<div class="category-name" '
+                    +'data-category='+ categoryData[params]['id'] +'>'
+                    +'<i class="fa fa-folder-open"></i>'
+                    + categoryData[params]['name']
+                    + '(<span class="taskNumDivi"></span>)'
+                    + '<i data-category= "' + categoryData[params]['id'] + '" class="fa fa-plus"></i>'
+                    + '<p class="'+defaults.delCateBtn+'"></p></div>';
                 }
                 cateLi.className = defaults.cateL1 + " " + categoryData[params]['id'];
                 $('.category-name', cateLi).addClass(categoryData[params]['id'])
@@ -28,12 +35,12 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                 cateLi.appendChild(ol);
                 //显示子类
                 if (categoryData[params]['child']) {
-                    console.log(categoryData[params]['child'])
                     for (var childParams in categoryData[params]['child']){
                         var newCateL2 = document.createElement('li');
                         newCateL2.className = categoryData[params]['child'][childParams]['id'] + ' '
                         + defaults.cateL2 + ' ' + categoryData[params]['id'];
                         newCateL2.innerHTML = '<i class="fa fa-file-o"></i>'+categoryData[params]['child'][childParams]['name'];
+                        newCateL2.setAttribute('data-category', categoryData[params]['id'])
                         ol.appendChild(newCateL2);
                         console.log(newCateL2)
                     }
@@ -172,16 +179,20 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
             $('#'+defaults.taskDescription)[0].value = '';
             //get which category choosed
             var choosedClass = $('.active', $('#'+defaults.cateL1Li)[0])[0].className.split(' ')[0];
-            var _data = data;
+            var _data = JSON.parse(storage.getItem('todoData'));
             for (var params in _data){
                 if (_data[params]['className'] === choosedClass) {
-                    $('#'+defaults.taskName)[0].className = _data[params]['id'];
-                    $('#'+defaults.taskName)[0].value = _data[params]['title'];
-                    $('#'+defaults.datepicker)[0].value = _data[params]['date'];
-                    $('#'+defaults.taskDescription)[0].value = _data[params]['description'];
-                    $('#'+defaults.taskName)[0].disabled = 'disabled';
-                    $('#'+defaults.datepicker)[0].disabled = 'disabled';
-                    $('#'+defaults.taskDescription)[0].disabled = 'disabled';
+                    $('#task-name-show')[0].innerHTML = _data[params]['title'];
+                    $('#date-show')[0].innerHTML = _data[params]['date'];
+                    var description = _data[params]['description'];
+                    // //换行符替换为<br/>
+                    // description = description.replace('\n', '<br />')
+                    // //空格替换为
+                    $('#description-show')[0].innerHTML = '<pre>'+description+'</pre>';
+                    $('#'+defaults.taskName)[0].style.display = 'none';
+                    $('#'+defaults.datepicker)[0].style.display = 'none';
+                    $('#'+defaults.taskDescription)[0].style.display = 'none';
+                    $('#'+defaults.taskName)[0].setAttribute('data-id', _data[params]['id']);
                     break;
                 }
             }
@@ -198,10 +209,10 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                 $(target).addClass('active-task')
                 var id = target.id;
                 data = JSON.parse(storage.getItem("todoData"));
-                $('#'+defaults.taskName)[0].value = data[id]['title'];
-                $('#'+defaults.datepicker)[0].value = data[id]['date'];
-                $('#'+defaults.taskDescription)[0].value = data[id]['description'];
-                $('#'+defaults.taskName)[0].className = id;
+                $('#task-name-show')[0].innerHTML = data[id]['title'];
+                $('#date-show')[0].innerHTML = data[id]['date'];
+                $('#description-show')[0].innerHTML = '<pre>' + data[id]['description'] + '</pre>';
+                $('#'+defaults.taskName)[0].setAttribute('data-id', id);
                 if ($.device.init()) {
                     $.device.slideRight($('section')[0], $('article')[0]);
                 }

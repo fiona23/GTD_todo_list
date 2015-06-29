@@ -24,7 +24,6 @@ define(['util', 'init','defaults', 'categoryData', 'todoData'], function ($, ini
                     init.showCategory()
                     //移除绑定事件
                     $.un('#'+defaults.addCateSub, "click");
-
                 }
                 else {
                     //没有输入
@@ -59,22 +58,17 @@ define(['util', 'init','defaults', 'categoryData', 'todoData'], function ($, ini
             //如果有输入子类名称
             if ($('#'+defaults.addCateL2Name)[0].value) {
                 //将被点击的目录类名分割成数组
-                var clsAttr = target.className.split(' ');
-                for (var i = clsAttr.length - 1; i >= 0; i--) {
-                    if (/^category[0-9]+$/.test(clsAttr[i])) {
-                        var id = new Date().getTime();
-                        console.log(clsAttr[i])
-                        if (!categoryData[clsAttr[i]].child) {
-                            categoryData[clsAttr[i]].child = {}
-                        };
-                        categoryData[clsAttr[i]].child[id] = {
-                            id: id,
-                            name: $('#'+defaults.addCateL2Name)[0].value
-                        }
-                        storage.setItem("categoryData", JSON.stringify(categoryData))
-                        break;
-                    }
+                console.log(target)
+                var category = target.getAttribute('data-category');
+                var id = new Date().getTime();
+                if (!categoryData[category].child) {
+                    categoryData[category].child = {}
+                };
+                categoryData[category].child[id] = {
+                    id: id,
+                    name: $('#'+defaults.addCateL2Name)[0].value
                 }
+                storage.setItem("categoryData", JSON.stringify(categoryData))
                 $('#'+defaults.addCateL2Overlay)[0].style.display = 'none';
                 $('#'+defaults.addCateL2Name)[0].value = ''
                 init.showCategory();
@@ -114,7 +108,6 @@ define(['util', 'init','defaults', 'categoryData', 'todoData'], function ($, ini
             }
             if (e.button === 2) {
                 //右键菜单
-                console.log(posy)
                 $('#'+defaults.rightBtn)[0].style.display = 'block';
                 $('#'+defaults.rightBtn)[0].style.left = posx - 20 + 'px';
                 $('#'+defaults.rightBtn)[0].style.top = posy - 330 + 'px';
@@ -124,6 +117,6 @@ define(['util', 'init','defaults', 'categoryData', 'todoData'], function ($, ini
             else {
                 return false
             }
-        }
+        },
     }
 })
