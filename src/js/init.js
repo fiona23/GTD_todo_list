@@ -126,15 +126,14 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                     taskDateLi = completedTaskDateLi;
                 }
                 //如果还没有任务就先创建第一个任务
-                createTaskDiv(parent, taskDetail, condition, taskDateLi)
-                
+                createTaskDiv(parent, taskDetail, condition, taskDateLi);
             }
             function appendToAll (params) {
                 var parent = $('#all')[0];
                 var taskDetail = document.createElement('li');
                 taskDetail.id = _data[params]['id'];
                 taskDetail.innerHTML = _data[params]['title']
-                + '<span class="delete-task" data-id='+ _data[params]['id'] +'>x<span>';
+                + '<span class="delete-task" data-id='+ _data[params]['id'] +'><span>';
                 $(taskDetail).addClass('all');
                 if (_data[params]['code'] === '1') {
                     $(taskDetail).addClass('all-pending');

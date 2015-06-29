@@ -168,12 +168,16 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
             },
             deleteTask: function (e) {
                 var id = target.getAttribute('data-id');
-                console.log(data[id])
-                delete data[id];
-                storage.setItem("todoData", JSON.stringify(data));
-                console.log(data[id])
-                init.showTaskList();
-                init.showTaskDetail();
+                if (id === '000') {
+                    alert('不能删除使用说明哦')
+                } else {
+                    delete data[id];
+                    storage.setItem("todoData", JSON.stringify(data));
+                    console.log(data[id])
+                    init.showTaskList();
+                    init.showTaskDetail();
+                }
+                
             },
             chooseCode: function (event) {
                 var e = event || window.event;

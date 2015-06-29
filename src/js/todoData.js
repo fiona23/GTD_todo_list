@@ -9,7 +9,7 @@ define([], function () {
                 className: 'default', 
                 code: '1'}
     }
-    if (!storage.getItem("todoData")) {
+    if (!storage.getItem("todoData") || storage.getItem("todoData").length === 2) {
         storage.setItem("todoData", JSON.stringify(data));
     }
     data = JSON.parse(storage.getItem('todoData'))
