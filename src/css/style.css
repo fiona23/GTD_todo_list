@@ -62,8 +62,12 @@ html {
 li {
   list-style: none;
 }
-i {
+i.fa-plus {
   cursor: pointer;
+  color: #22442c;
+}
+i.fa-plus:hover {
+  color: #a4c68a;
 }
 .overlay {
   position: absolute;
@@ -76,8 +80,6 @@ i {
 }
 .overlay .black {
   position: absolute;
-  top: 35%;
-  left: 40%;
   width: 400px;
   height: 230px;
   border-radius: 5px;
@@ -131,6 +133,7 @@ header {
   height: 320px;
   background: url(../img/banner.png);
   position: absolute;
+  z-index: 999;
   width: 100%;
 }
 header h1 {
@@ -138,6 +141,22 @@ header h1 {
   color: #fff;
   padding-top: 100px;
   text-align: center;
+}
+header a {
+  outline: none;
+  opacity: 0.5;
+  color: #fff;
+  -webkit-transition: all 0.6s;
+  -moz-transition: all 0.6s;
+  -ms-transition: all 0.6s;
+  -o-transition: all 0.6s;
+  transition: all 0.6s;
+}
+header a:visited {
+  color: #fff;
+}
+header a:hover {
+  opacity: 0.8;
 }
 #content {
   position: relative;
@@ -449,6 +468,11 @@ article {
     -o-transform: translate3d(100%, 0, 0);
     transform: translate3d(100%, 0, 0);
   }
+  #add-category,
+  #add-task {
+    position: absolute;
+    bottom: 50px;
+  }
 }
 @media (max-width: 460px) {
   #task-name,
@@ -458,5 +482,16 @@ article {
   #task-header-line i {
     padding: 0 5px;
     z-index: 9999;
+  }
+}
+@media (max-width: 400px) {
+  .overlay .black {
+    width: 280px;
+  }
+  .overlay .cancle {
+    position: absolute;
+    left: 274px;
+    color: #222;
+    cursor: pointer;
   }
 }

@@ -185,10 +185,7 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                     $('#task-name-show')[0].innerHTML = _data[params]['title'];
                     $('#date-show')[0].innerHTML = _data[params]['date'];
                     var description = _data[params]['description'];
-                    // //换行符替换为<br/>
-                    // description = description.replace('\n', '<br />')
-                    // //空格替换为
-                    $('#description-show')[0].innerHTML = '<pre>'+description+'</pre>';
+                    $('#description-show')[0].innerHTML = '<pre>' + description + '</pre>';
                     $('#'+defaults.taskName)[0].style.display = 'none';
                     $('#'+defaults.datepicker)[0].style.display = 'none';
                     $('#'+defaults.taskDescription)[0].style.display = 'none';
@@ -217,6 +214,15 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                     $.device.slideRight($('section')[0], $('article')[0]);
                 }
             }
+        },
+
+        setOverlayCss: function (ele) {
+            var bodyWidth = parseInt(document.documentElement.clientWidth);
+            var bodyHeight = parseInt(document.documentElement.clientHeight);
+            var eleWidth = parseInt(window.getComputedStyle(ele, null).getPropertyValue('width'));
+            var eleHeight = parseInt(window.getComputedStyle(ele, null).getPropertyValue('height'));
+            ele.style.left = (bodyWidth-eleWidth)/2 + 'px'
+            ele.style.top = (bodyHeight-eleHeight)/2 + 'px';
         },
 
         slide: function (e, now, pre, next, touchPos) {

@@ -309,8 +309,7 @@ util.delegate = delegateEvent;
 
 // 判断是否为IE浏览器，返回-1或者版本号
 
-function isIE() {
-
+util.isIE = function () {
     var ua = navigator.userAgent;
     if (/MSIE ([^;]+)/.test(ua)) {
         return RegExp["$1"]

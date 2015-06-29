@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>todo list</title>
+    <title>GTD_Tool</title>
+    <link type="image/x-icon" rel="shortcut icon" href="img/icon.png" />
     <link rel="stylesheet" href="css/style.css" type="text/css">
-     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
     
     <!--[if lt IE9]> 
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -13,7 +14,10 @@
 </head>
 <body>
  <header>
-     <h1>GTD Tools</h1>
+    <h1>GTD Tools
+        <a href="https://github.com/fiona23/GTD_todo_list" target="_blank" title="fork me on github"><i class="fa fa-github fa-2x"></i></a>
+        <!-- <a href="http://fiona23.github.io/" title="我的个人主页" traget="_blank"><i class="fa fa-lemon-o fa-2x"></i></a> -->
+    </h1>
  </header>
 <div id="content">
  <aside oncontextmenu="return false;" class="category">
@@ -25,7 +29,7 @@
         <li id="add-category-level2">添加子分类</li>
         <li id="delet-category-level2">删除子分类</li>
     </ul>
-    <p id="add-category" class="add-category"><i class="fa fa-plus fa-lg"></i>新加分类</p>
+    <p id="add-category" class="add-category"><i class="fa fa-plus fa-lg"></i>新加主分类</p>
  </aside>
  <section class="list">
      <p id="codes-line"><span id="all-btn" class="codes active">所有</span>
@@ -44,6 +48,7 @@
 
     <div id="task-header-line">
         <input id="task-name" type="text" disabled="disabled" placeholder="请输入任务名称">
+        <span id="task-name-show"></span>
         <i id="complete" class="task-btn fa fa-check-square-o fa-lg" title="完成任务"></i>
         <i id="edit" class="task-btn fa fa-pencil-square-o fa-lg" title="编辑任务"></i>
         <!-- <div id="sure-cancle"> -->
@@ -53,9 +58,11 @@
     </div>
     <div id="date-line">
         <label for="">任务日期</label><input type="text" id="datepicker" disabled="disabled" placeholder="请输入日期，格式YYYY/MM/DD">
+        <span id="date-show"></span>
     </div>
     <div class="task-content">
-        <textarea id="task-description" disabled="disabled"></textarea>
+        <textarea id="task-description" disabled="disabled" rows='10' placeholder="输入任务描述，支持部分html标签"></textarea>
+        <p id="description-show"></p>
     </div>
 
  </article>
@@ -66,7 +73,7 @@
     <div class="black">
         <i class="cancle fa fa-times-circle-o fa-2x"></i>
         <div class="overlay-content">
-            <p>新建分类</p>
+            <p>新建主分类</p>
             <label class="name-label" for="">分类名称</label>
             <input class="name-input" id="add-category-name" type="text">
             <input class="sub-input" id="add-category-submit" type="submit" value="确认">
@@ -77,7 +84,7 @@
     <div class="black">
         <i class="cancle fa fa-times-circle-o fa-2x"></i>
         <div class="overlay-content">
-            <p>新建分类</p>
+            <p>新建子分类</p>
             <label class="name-label" for="">分类名称</label>
             <input class="name-input" id="add-category-level2-name" type="text">
             <input class="sub-input" id="add-category-level2-submit" type="submit" value="确认">

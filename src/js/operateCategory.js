@@ -5,6 +5,7 @@ define(['util', 'init','defaults', 'categoryData', 'todoData'], function ($, ini
             var tempData = {}
             //显示浮层
             $('#' + defaults.cateOverlay)[0].style.display = "block";
+            init.setOverlayCss($('.black')[0])
             //存储一个cateNum来区分命名所有的category
             if (!storage.getItem("cateNum")) {
                 storage.setItem("cateNum", 0)

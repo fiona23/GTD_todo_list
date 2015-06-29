@@ -20,6 +20,7 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
     init.showTaskList();
     init.showTaskDetail();
     init.clickTask();
+    
     //all event Listener
     function allbind () {
         //add category
@@ -33,10 +34,12 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
         //右键点击添加子目录
         $.on('#'+defaults.addCateL2, 'click', function () {
             $('#'+defaults.addCateL2Overlay)[0].style.display = 'block';
+            init.setOverlayCss($('.black')[1])
         })
         //点击加号添加子目录
         $.delegate('#'+defaults.cateL1Li, 'i', 'click', function () {
             $('#'+defaults.addCateL2Overlay)[0].style.display = 'block';
+            init.setOverlayCss($('.black')[1])
             operateCategory.addCategoryLevel2;
         });
 
@@ -49,7 +52,9 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
 
         //add task
         $.on('#'+defaults.addTask, 'click', function (e) {
-            $.on('#'+defaults.addTask, 'click')
+            if($.device.init()){
+                $.device.slideRight($('section')[0], $('article')[0])
+            }
             operateTask.addTask(e)
         })
 
