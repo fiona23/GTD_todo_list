@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GTD_Tool</title>
     <link type="image/x-icon" rel="shortcut icon" href="img/icon.png" />
-    <link rel="stylesheet" href="css/style.css" type="text/css">
     <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css" type="text/css">
     
     <!--[if lt IE9]> 
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -19,17 +19,19 @@
         <!-- <a href="http://fiona23.github.io/" title="我的个人主页" traget="_blank"><i class="fa fa-lemon-o fa-2x"></i></a> -->
     </h1>
  </header>
+<ul oncontextmenu="return false;" id="right-mouse-btn">
+    <li id="add-category-level2">添加子分类</li>
+    <li id="delet-category-level2">删除子分类</li>
+</ul>
 <div id="content">
+
  <aside oncontextmenu="return false;" class="category">
     <p>所有任务(<span id="all-task-num"></span>)</p>
     <p>分类列表</p>
     <ul id="category-level1-list">
     </ul>
-    <ul id="right-mouse-btn">
-        <li id="add-category-level2">添加子分类</li>
-        <li id="delet-category-level2">删除子分类</li>
-    </ul>
-    <p id="add-category" class="add-category"><i class="fa fa-plus fa-lg"></i>新加主分类</p>
+    
+    <p id="add-category" class="add-category">新加主分类</p>
  </aside>
  <section class="list">
      <p id="codes-line"><span id="all-btn" class="codes active">所有</span>
@@ -42,7 +44,7 @@
          <div id="completed"></div>
      </div>
      
-     <p id="add-task" class="add-task"><i class="fa fa-plus fa-lg"></i>新加任务</p>
+     <p id="add-task" class="add-task">新加任务</p>
  </section>
  <article class="detail">
 
