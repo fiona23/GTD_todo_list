@@ -166,6 +166,15 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                 $('#'+defaults.datepicker)[0].value = data[id]['date'];
                 $('#'+defaults.taskDescription)[0].value = data[id]['description'];
             },
+            deleteTask: function (e) {
+                var id = target.getAttribute('data-id');
+                console.log(data[id])
+                delete data[id];
+                storage.setItem("todoData", JSON.stringify(data));
+                console.log(data[id])
+                init.showTaskList();
+                init.showTaskDetail();
+            },
             chooseCode: function (event) {
                 var e = event || window.event;
                 target = e.srcElement? e.srcElement : e.target;

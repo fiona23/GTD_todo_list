@@ -297,13 +297,26 @@ section {
                 border-radius: 5px;
             }
         }
-
-    .one-day-task p{
-        list-style: none;
-        padding: 10px;
-        height: 40px;
-        line-height: 20px;
-        background-color: #f1f1f1;
+    .one-day-task  {
+        position: relative;
+        p{
+            list-style: none;
+            padding: 10px;
+            height: 40px;
+            line-height: 20px;
+            background-color: #f1f1f1; 
+        }
+        .delete-task {
+            background: url(../img/x.png) no-repeat;
+            width: 12px;
+            height: 12px;
+            position: absolute;
+            right: 10px;
+            display: none;
+        }
+        li:hover .delete-task {
+            display: inline;
+        }
     }
 
         .one-day-task ol li{

@@ -318,12 +318,26 @@ section::-webkit-scrollbar-thumb {
   background-color: #fff;
   border-radius: 5px;
 }
+.one-day-task {
+  position: relative;
+}
 .one-day-task p {
   list-style: none;
   padding: 10px;
   height: 40px;
   line-height: 20px;
   background-color: #f1f1f1;
+}
+.one-day-task .delete-task {
+  background: url(../img/x.png) no-repeat;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  right: 10px;
+  display: none;
+}
+.one-day-task li:hover .delete-task {
+  display: inline;
 }
 .one-day-task ol li {
   background-color: #fff;

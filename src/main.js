@@ -66,7 +66,14 @@ require(['util', 'init', 'operateCategory','operateTask','defaults'], function (
         $.on('#'+defaults.taskComplete, 'click' ,function () {
             var sure = confirm("确定已经完成吗")
             if (sure == true) {
-            operateTask.taskComplete();
+                operateTask.taskComplete();
+            }
+        })
+        //删除任务
+        $.delegate('.task-wrapper', 'span', 'click', function () {
+            var sure = confirm("确定删除吗，不可恢复")
+            if (sure == true) {
+                operateTask.deleteTask();
             }
         })
         //选择【所有】 【未完成】 【已完成】

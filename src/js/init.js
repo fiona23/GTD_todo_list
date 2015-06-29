@@ -133,7 +133,8 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                 var parent = $('#all')[0];
                 var taskDetail = document.createElement('li');
                 taskDetail.id = _data[params]['id'];
-                taskDetail.innerHTML = _data[params]['title'];
+                taskDetail.innerHTML = _data[params]['title']
+                + '<span class="delete-task" data-id='+ _data[params]['id'] +'>x<span>';
                 $(taskDetail).addClass('all');
                 if (_data[params]['code'] === '1') {
                     $(taskDetail).addClass('all-pending');
@@ -167,12 +168,12 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                         }
                         //if date doesnt exsit, create
                         else if(i==0) {
-                                var newDayTask = document.createElement('div');
-                                parent.appendChild(newDayTask);
-                                newDayTask.innerHTML = '<p>' + _data[params]['date'] + '</p>';
-                                $(newDayTask).addClass(defaults.oneDayTask);
-                                newDayTask.appendChild(document.createElement('ol'));
-                                newDayTask.getElementsByTagName('ol')[0].appendChild(taskDetail);
+                            var newDayTask = document.createElement('div');
+                            parent.appendChild(newDayTask);
+                            newDayTask.innerHTML = '<p>' + _data[params]['date'] + '</p>';
+                            $(newDayTask).addClass(defaults.oneDayTask);
+                            newDayTask.appendChild(document.createElement('ol'));
+                            newDayTask.getElementsByTagName('ol')[0].appendChild(taskDetail);
                         }
                     }
                 }
