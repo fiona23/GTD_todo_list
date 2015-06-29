@@ -110,8 +110,8 @@ define(['util', 'init','defaults', 'categoryData', 'todoData'], function ($, ini
             if (e.button === 2) {
                 //右键菜单
                 $('#'+defaults.rightBtn)[0].style.display = 'block';
-                $('#'+defaults.rightBtn)[0].style.left = posx - 20 + 'px';
-                $('#'+defaults.rightBtn)[0].style.top = posy - 330 + 'px';
+                $('#'+defaults.rightBtn)[0].style.left = posx + 'px';
+                $('#'+defaults.rightBtn)[0].style.top = posy + 'px';
 
             }
             //不是按下的右键

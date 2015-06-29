@@ -52,9 +52,7 @@ html {
   cursor: pointer;
   overflow-y: scroll;
   box-sizing: border-box;
-}
-.bottom-add i {
-  padding: 0 12px 0 12px;
+  padding: 0 12px 0 20px;
 }
 .bottom-add:hover {
   background-color: #eee;
@@ -193,9 +191,7 @@ aside::-webkit-scrollbar-thumb {
   cursor: pointer;
   overflow-y: scroll;
   box-sizing: border-box;
-}
-.add-category i {
-  padding: 0 12px 0 12px;
+  padding: 0 12px 0 20px;
 }
 .add-category:hover {
   background-color: #eee;
@@ -298,12 +294,13 @@ section::-webkit-scrollbar-thumb {
   cursor: pointer;
   overflow-y: scroll;
   box-sizing: border-box;
-}
-.add-task i {
-  padding: 0 12px 0 12px;
+  padding: 0 12px 0 20px;
 }
 .add-task:hover {
   background-color: #eee;
+}
+.notask-note {
+  padding: 10px;
 }
 #codes-line {
   width: 100%;
@@ -348,6 +345,14 @@ section::-webkit-scrollbar-thumb {
 }
 #completed {
   display: none;
+}
+li.all-completed {
+  color: #888;
+}
+li.all-completed:after {
+  font-family: FontAwesome;
+  content: '\f00c';
+  padding: 0 10px;
 }
 article {
   margin: 0 1% 0 1%;

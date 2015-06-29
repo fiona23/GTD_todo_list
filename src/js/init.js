@@ -42,7 +42,6 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                         newCateL2.innerHTML = '<i class="fa fa-file-o"></i>'+categoryData[params]['child'][childParams]['name'];
                         newCateL2.setAttribute('data-category', categoryData[params]['id'])
                         ol.appendChild(newCateL2);
-                        console.log(newCateL2)
                     }
                     //show amount of tasks
                     $('#'+defaults.allTaskNum)[0].innerHTML = $('.'+defaults.cateL2).length;
@@ -87,13 +86,18 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
             $(codes['2'])[0].innerHTML = '';
             $('#all')[0].innerHTML = '';
             var choosedClass = $('.active', $('#'+defaults.cateL1Li)[0])[0].className.split(' ')[0];
-            var _data = JSON.parse(storage.getItem('todoData'))
+            var _data = JSON.parse(storage.getItem('todoData'));
+            var exsit = 0;
             for (var params in _data){
                 //get which category choosed
                 if (_data[params]['className'] === choosedClass) {
                     appendToCP(params)
                     appendToAll(params)
+                    exsit = 1;
                 }
+            }
+            if(!exsit) {
+                $('#all')[0].innerHTML = '<p class="notask-note">暂时还没有任务哦，点击下方添加任务</p>';
             }
             function appendToCP (params) {
                 var parent = $(codes[_data[params]['code']])[0];
@@ -130,21 +134,25 @@ define(['util', 'defaults', 'categoryData', 'todoData'], function ($, defaults, 
                 var taskDetail = document.createElement('li');
                 taskDetail.id = _data[params]['id'];
                 taskDetail.innerHTML = _data[params]['title'];
-                $(taskDetail).addClass('all')
+                $(taskDetail).addClass('all');
+                if (_data[params]['code'] === '1') {
+                    $(taskDetail).addClass('all-pending');
+                } else {
+                    $(taskDetail).addClass('all-completed');
+                }
                 var allTaskDateLi = $('.'+defaults.oneDayTask, $('#all')[0]);
                 var allTask = $('.all');
                 var condition = !allTask[0];
-                console.log(condition)
                 taskDateLi = allTaskDateLi;
                 createTaskDiv(parent, taskDetail, condition, taskDateLi)
-
             }
             function createTaskDiv (parent, taskDetail, condition) {
                 if (condition) {
                     var newDayTask = document.createElement('div');
                     parent.appendChild(newDayTask);
                     //create p->date
-                    newDayTask.innerHTML = '<p>' + _data[params]['date'] + '</p>';
+                    newDayTask.innerHTML = '<p>'
+                    +  _data[params]['date'] + '</p>';
                     $(newDayTask).addClass(defaults.oneDayTask);
                     $(newDayTask).addClass(_data[params]['className']);
                     newDayTask.appendChild(document.createElement('ol'))

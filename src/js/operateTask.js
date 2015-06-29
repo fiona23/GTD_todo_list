@@ -98,11 +98,13 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                                 className: className
                             }
                             data[id] = tempData;
-                            console.log(data)
                             //storage each task info
                             storage.setItem("todoData", JSON.stringify(data));
                             console.log(JSON.parse(storage.getItem("todoData")))
                             init.showTaskList();
+                            changeBtn('save');
+                            changeInputState(ele);
+                            $.un('#'+defaults.sure, 'click')
                         }
                         else {
                             alert('日期格式错误，请按照YYYY/MM/DD格式填写')
@@ -111,11 +113,7 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                     //信息填写不全
                     else {
                         alert('信息填写不全')
-                        return false
                     }
-                    changeBtn('save');
-                    changeInputState(ele);
-                    $.un('#'+defaults.sure, 'click')
                 })
                 
             },
@@ -128,27 +126,36 @@ define(['util', 'init','defaults', 'todoData'], function ($, init, defaults, dat
                 $('#' + defaults.taskDescription)[0].value = data[id]['description'];
                 $.on('#'+defaults.sure, 'click', function (ele) {
                     //update local storage
-                    
                     var title = $('#' + defaults.taskName)[0].value;
                     var date = $('#' + defaults.datepicker)[0].value;
                     var description = $('#' + defaults.taskDescription)[0].value;
-                    data[id]['title'] = title;
-                    data[id]['date'] = date;
-                    data[id]['description'] = description;
-                    storage.setItem("todoData", JSON.stringify(data));
-                    changeInputState(ele);
-                    init.showTaskList();
-                    init.showTaskDetail();
-                    changeBtn('save');
-                    $.un('#'+defaults.sure, 'click')
+                    if (testDate(date)) {
+                        data[id]['title'] = title;
+                        data[id]['date'] = date;
+                        data[id]['description'] = description;
+                        storage.setItem("todoData", JSON.stringify(data));
+                        changeInputState(ele);
+                        init.showTaskList();
+                        init.showTaskDetail();
+                        changeBtn('save');
+                        $.un('#'+defaults.sure, 'click')
+                    }
+                    else {
+                        alert('日期格式错误，请按照YYYY/MM/DD格式填写')
+                    }
+                    
                 })
             },
             taskComplete: function () {
-                var id = $('#' + defaults.taskName)[0].className
-                data[id]['code'] = '2';
-                //update local storage
-                storage.setItem("todoData", JSON.stringify(data));
-                init.showTaskList();
+                var id = $('#' + defaults.taskName)[0].getAttribute('data-id')
+                if (data[id]['code'] === '1') {
+                    data[id]['code'] = '2';
+                    //update local storage
+                    storage.setItem("todoData", JSON.stringify(data));
+                    init.showTaskList();
+                } else {
+                    alert('这个任务已经完成啦，不用再次完成~')
+                }
             },
             cancleEditTask: function (e) {
                 changeBtn('save');
